@@ -54,7 +54,7 @@ public class NetBackup extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-    	//HOLA!
+    	//HOLA! me llamo Jorge
     	//----------------------INICIAMOS EL CLIENTE------------------------------
     	IniciarCliente();
     	//------------------------------------------------------------------------
