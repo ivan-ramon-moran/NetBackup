@@ -54,7 +54,8 @@ public class NetBackup extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        //----------------------INICIAMOS EL CLIENTE------------------------------
+        //PENE
+    	//----------------------INICIAMOS EL CLIENTE------------------------------
     	IniciarCliente();
     	//------------------------------------------------------------------------
     	//------------------------USUARIO DEL SISTEMA-----------------------------
@@ -502,6 +503,7 @@ public class NetBackup extends Application {
     void opcionConfiguracion(){
     	paneles.getChildren().clear();
     	paneles.getChildren().add(panelConfiguracion);
+    	generarConfiguracionGeneral();	
     }
     
     void IniciarCliente()
