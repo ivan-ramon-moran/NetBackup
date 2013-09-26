@@ -360,7 +360,7 @@ public class VentanaDatosEncontrados{
 							bArrayAudio[item.getNumeroItem()] = true;
 							
 						item.setSeleccionado(true);
-						elementosSeleccionados.add(new Transferencia(item.getRutaFichero(), item.getNombreFichero(), "", "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+						elementosSeleccionados.add(new Transferencia(item.getRutaFichero(), item.getNombreFichero(), item.getTamanyo(), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
 						ContadorItems.incrementarNumero();
 					}	
 				}

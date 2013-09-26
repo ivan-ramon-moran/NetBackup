@@ -1,3 +1,6 @@
+import java.io.File;
+import java.text.DecimalFormat;
+
 import javafx.geometry.Pos;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -93,6 +96,32 @@ public class ItemDE extends VBox{
 	public int getNumeroItem(){
 		return this.iNumeroItem;
 	}
+	
+	public String getTamanyo(){
+		String strTamanyo = "";
+		File file = new File(this.getRutaFichero());
+		long tamanyo = file.length();
+		strTamanyo = obtenerTamanyo(tamanyo);
+		return strTamanyo;
+	}
+	
+	 private String obtenerTamanyo(Long fileSize){
+	    	String strTamanyo = "";
+	    	DecimalFormat df = new DecimalFormat("#.##");
+	    	double dFileSize = fileSize;
+	    	
+	    	if (fileSize <= WatchDir.KILOBYTE){
+	    		strTamanyo = fileSize + " Bytes";
+	    	}else if (fileSize > WatchDir.KILOBYTE && fileSize <=  WatchDir.MEGABYTE){
+	    		strTamanyo = df.format((dFileSize / WatchDir.KILOBYTE)) + "KBytes";
+	    	}else if (fileSize > WatchDir.MEGABYTE && fileSize <= WatchDir.GIGABYTE){
+	    		strTamanyo = df.format((dFileSize / WatchDir.MEGABYTE)) + "MBytes";
+	    	}else{
+	    		strTamanyo = df.format((dFileSize / WatchDir.GIGABYTE)) + "GBytes";
+	    	}
+	    	
+	    	return strTamanyo;
+	    }
 	
 	private Image obtenerImagen(){
 		Image image = null;
