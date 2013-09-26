@@ -51,7 +51,6 @@ public class WatchDir {
     private Cliente cliente = null;
     private ExtendedTable transferencias = null;
     private Cola colaTransferencias = null;
-    private int idTransferencia = 0;
     
     //Constantes
     static final long KILOBYTE = 1024;
@@ -168,11 +167,11 @@ public class WatchDir {
 	                		Platform.runLater(new Runnable() {
 	                			  @Override
 	                			  public void run() {
-	      	                		transferencias.addItem(new Transferencia(file.getAbsolutePath(), file.getName(), obtenerTamanyo(file.length()), "Archivo", "En cola...", idTransferencia));
+	      	                		transferencias.addItem(new Transferencia(file.getAbsolutePath(), file.getName(), obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
 	                			  }
 	                			});
-	                		colaTransferencias.encolar(new Transferencia(child.toString(), file.getName(),obtenerTamanyo(file.length()), "Archivo", "En cola...", idTransferencia));
-  	                		idTransferencia++;
+	                		colaTransferencias.encolar(new Transferencia(child.toString(), file.getName(),obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+  	                		ContadorItems.incrementarNumero();
 		                }
 		                
 	                }

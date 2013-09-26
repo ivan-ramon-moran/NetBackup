@@ -47,6 +47,7 @@ public class NetBackup extends Application {
 	private ArrayList<Object> aOpciones = new ArrayList<Object>();
 	private ArrayList<Object> aLabelOpciones = new ArrayList<Object>();
 	private VBox cuerpoConfiguracion;
+	private UsuarioSistema usuarioSistema = null;
 	
 	public static void main(String[] args) {
         launch(args);
@@ -54,14 +55,13 @@ public class NetBackup extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-    	//HOLA! me llamo Jorge
+    	//------------------------USUARIO DEL SISTEMA-----------------------------
+    	usuarioSistema = new UsuarioSistema();
+    	//------------------------------------------------------------------------
     	//----------------------INICIAMOS EL CLIENTE------------------------------
     	IniciarCliente();
     	//------------------------------------------------------------------------
-    	//------------------------USUARIO DEL SISTEMA-----------------------------
-    	UsuarioSistema usuarioSistema = new UsuarioSistema();
-    	System.out.println(usuarioSistema.getUsuario());
-    	//------------------------------------------------------------------------
+    	
     	final Stage ptrStage = primaryStage;
     	primaryStage.initStyle(StageStyle.TRANSPARENT);
     	Button btn = new Button();
@@ -69,8 +69,7 @@ public class NetBackup extends Application {
         btn.setText("Say 'Hello World'");
         
         btn.setOnAction(new EventHandler<ActionEvent>() {
- 
-            @Override
+        	@Override
             public void handle(ActionEvent event) {
                 System.out.println("Hello World!");
             }
@@ -468,7 +467,7 @@ public class NetBackup extends Application {
         
         contenedorCuerpo.getChildren().add(paneles);
         //------------------------FILE MONITOR--------------------------------------
-        Path dir = Paths.get("C:\\Users\\K3rneL\\Desktop");
+        Path dir = Paths.get("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop");
         tFileMonitor = new ThreadFileMonitor(dir, cliente, transferencias, colaTransferencias);
         tFileMonitor.start();
         //--------------------------------------------------------------------------
@@ -514,8 +513,8 @@ public class NetBackup extends Application {
     	tEnvio = new ThreadEnvio(cliente, colaTransferencias, transferencias);
     	tEnvio.start();
     	//Este thread solo la primera vez!
-    	//ThreadCDSensibles tDatos = new ThreadCDSensibles("C:\\Users\\K3rneL", colaTransferencias, transferencias);
-    	//tDatos.start();
+    	ThreadCDSensibles tDatos = new ThreadCDSensibles("C:\\Users\\" + usuarioSistema.getUsuario(), colaTransferencias, transferencias);
+    	tDatos.start();
     }
     
     void generarConfiguracionGeneral(){ 

@@ -76,7 +76,6 @@ public class ExtendedTable extends ScrollPane{
 			fila.getStyleClass().add("extended-table-fila-impar");
 
 			
-		iNumeroItems++;
 		alFilas.add(fila);
 		fila.setOnMouseClicked(new EventHandler<MouseEvent>(){
 			@Override
@@ -123,6 +122,7 @@ public class ExtendedTable extends ScrollPane{
 		separador.setId("transferencias-separador");
 		separador.setPrefHeight(1);
 		contenedorPrincipal.getChildren().add(separador);
+		iNumeroItems++;
 	}
 	
 	public ProgressBar getProgressBar(int indice){
@@ -131,6 +131,10 @@ public class ExtendedTable extends ScrollPane{
 	
 	public Label getLabelEstado(int indice){
 		return this.alEstado.get(indice);
+	}
+	
+	public int getNumeroElementos(){
+		return this.iNumeroItems;
 	}
 	
 	public HBox getFila(int indice){
