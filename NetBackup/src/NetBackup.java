@@ -333,18 +333,20 @@ public class NetBackup extends Application {
         //-------------------------------------------------------------------------
         
         //---------------------------------PANEL INICIO----------------------------
-        panelInicio = new VBox();
+        panelInicio = new VBox(10);
         VBox.setVgrow(panelInicio, Priority.ALWAYS);
         panelInicio.setId("panel-inicio");
         
         HBox contConexionMod = new HBox(5);
         HBox contConexion = new HBox(10);
+        contConexion.setMaxSize(485, 180);
+        contConexion.setPrefSize(485, 180);
         VBox contDetallesConexion = new VBox(5);
         DropShadow dsConexion = new DropShadow();
         dsConexion.setOffsetY(3.0);
         dsConexion.setOffsetX(3.0);
         dsConexion.setColor(Color.GRAY);
-        contConexionMod.setEffect(dsConexion);
+        //contConexionMod.setEffect(dsConexion);
         contConexion.setStyle("-fx-border-radius: 5;"); 
         ImageView ivServidor = new ImageView(new Image("images/server.png"));
         ivServidor.setFitHeight(128);
@@ -388,13 +390,15 @@ public class NetBackup extends Application {
         contDetallesConexion.getChildren().addAll(contEstado, contUsuario, contEspacio, contUsuarios, contRutaServidor);
         contConexion.getChildren().add(ivServidor);
         contConexion.getChildren().add(contDetallesConexion);
+        
+        opcionInicio();
         //----------------------------MODULOS-----------------------------------------------------
         HBox contModulos = new HBox();
         DropShadow dsModulos = new DropShadow();
         dsModulos.setOffsetY(3.0);
         dsModulos.setOffsetX(3.0);
         dsModulos.setColor(Color.GRAY);
-        contModulos.setEffect(dsModulos);
+        //contModulos.setEffect(dsModulos);
         
         contModulos.getStyleClass().add("detalles-conexion");
         HBox.setHgrow(contModulos, Priority.ALWAYS);
@@ -438,12 +442,29 @@ public class NetBackup extends Application {
         contDetallesModulos.getChildren().addAll(contTR, contSincro, contRestaurar, contVersiones);
         
         contModulos.getChildren().add(contDetallesModulos);
-        //----------------------------------------------------------------------------------------
-        
-        
+        //---------------------------------------------------------------------------------------
         contConexionMod.getChildren().addAll(contConexion, contModulos);
         panelInicio.getChildren().add(contConexionMod);
         //-------------------------------------------------------------------------
+        //---------------------------------RESTAURACION CON UN CLIC-------------------------------
+        VBox contModuloRestaurar = new VBox(10);
+        contModuloRestaurar.setMaxSize(485, 200);
+        contModuloRestaurar.setPrefSize(485, 200);
+        contModuloRestaurar.getStyleClass().add("detalles-conexion");
+        DropShadow dsRestaurar = new DropShadow();
+        dsRestaurar.setOffsetY(3.0);
+        dsRestaurar.setOffsetX(3.0);
+        dsRestaurar.setColor(Color.GRAY);
+        Label labelTituloRestaurar = new Label("RESTAURACIÓN CON UN CLICK");
+        labelTituloRestaurar.setStyle("-fx-font-weight: bold; -fx-font-size: 14"); 
+        Label labelInfoRestaurar = new Label("La función de restauración le permite restaurar su equipo en caso de perdida de datos masiva. Todos los ficheros se ubicaran donde estaban ubicados antes de la perdida.");
+        labelInfoRestaurar.getStyleClass().add("label-inicio");
+        labelInfoRestaurar.setWrapText(true);
+        //contModuloRestaurar.setEffect(dsRestaurar);
+        contModuloRestaurar.getChildren().addAll(labelTituloRestaurar,labelInfoRestaurar);
+        panelInicio.getChildren().add(contModuloRestaurar);
+        //----------------------------------------------------------------------------------------
+        
         
         ListViewIcons list = new ListViewIcons();
     	list.setId("lista");
@@ -513,8 +534,8 @@ public class NetBackup extends Application {
     	tEnvio = new ThreadEnvio(cliente, colaTransferencias, transferencias);
     	tEnvio.start();
     	//Este thread solo la primera vez!
-    	ThreadCDSensibles tDatos = new ThreadCDSensibles("C:\\Users\\" + usuarioSistema.getUsuario(), colaTransferencias, transferencias);
-    	tDatos.start();
+    	//ThreadCDSensibles tDatos = new ThreadCDSensibles("C:\\Users\\" + usuarioSistema.getUsuario(), colaTransferencias, transferencias);
+    	//tDatos.start();
     }
     
     void generarConfiguracionGeneral(){ 

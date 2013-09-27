@@ -118,7 +118,13 @@ public class Cliente {
 				  }
 			});
 			
-			fila.setStyle("-fx-background-color: transparent;");
+			System.out.println("PENE" + transferencia.getIdTransferencia());
+			if (transferencia.getIdTransferencia() % 2 == 0){
+				fila.setStyle("extended-table-fila-par");
+			}
+			else{
+				fila.setStyle("extended-table-fila-impar");
+			}	
 			
 			try {
 				Thread.sleep(100);
