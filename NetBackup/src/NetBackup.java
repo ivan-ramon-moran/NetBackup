@@ -55,6 +55,7 @@ public class NetBackup extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+    	//Hola
     	//------------------------USUARIO DEL SISTEMA-----------------------------
     	usuarioSistema = new UsuarioSistema();
     	//------------------------------------------------------------------------
