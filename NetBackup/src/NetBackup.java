@@ -50,6 +50,7 @@ public class NetBackup extends Application {
 	private ArrayList<Object> aLabelOpciones = new ArrayList<Object>();
 	private VBox cuerpoConfiguracion;
 	private UsuarioSistema usuarioSistema = null;
+	private Ventana logging = null;
 	
 	public static void main(String[] args) {
         launch(args);
@@ -57,6 +58,8 @@ public class NetBackup extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+    	//-----------------SE INICIA LA VENTANA DE LOGGING------------------------
+    	logging = new Ventana();
     	//------------------------USUARIO DEL SISTEMA-----------------------------
     	usuarioSistema = new UsuarioSistema();
     	//------------------------------------------------------------------------

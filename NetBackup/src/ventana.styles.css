@@ -1,0 +1,73 @@
+.root
+{
+    -fx-background-color: #f3f3f9;
+    -fx-font-smoothing-type: lcd;
+}
+
+#ventana-principal{
+	-fx-border-insets: 23;
+    -fx-background-insets: 23;
+	-fx-background-radius: 6;
+ 	-fx-border-radius: 6;
+	-fx-border-color: rgba(255, 255, 255, 1);
+	-fx-border-style: solid;
+	-fx-border-width: 1;
+	-fx-effect: dropshadow(three-pass-box, rgba(229, 229, 229, 0.5), 24, 0.5, 0, 0);
+	-fx-background-color: #f3f3f3;
+}
+#cTitulo {
+    -fx-background-color: #3e3e3e;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+	-fx-border-radius: 6 6 0 0;
+	-fx-background-radius: 6 6 0 0;
+}
+
+#ventana-titulo{
+	-fx-text-fill: white;
+}
+
+#barra{
+	-fx-background-color: #3e3e3e;
+	-fx-border-radius: 0 0 6 6;
+	-fx-background-radius: 0 0 6 6;
+	-fx-text-fill: linear-gradient(white, #FFFAF0);
+}
+
+#aceptar{
+	-fx-background-color:
+        #FF0000,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+    -fx-font-weight: bold 120%;
+    -fx-font-family: "Bradley Hand ITC";
+    -fx-text-fill: linear-gradient(white, #FFFAF0);
+    -fx-font-size: 15px 
+}
+
+#cancelar{
+	-fx-background-color:
+        #FF0000,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+	-fx-font-weight: bold 120%;
+	-fx-font-family: "Bradley Hand ITC";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 15px 
+    
+}
+
+#Nuevo-Usuario{
+	-fx-background-color:
+        #FF0000,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+	-fx-font-weight: bold 120%;
+	-fx-font-family: "Bradley Hand ITC";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 15px 
+	
+}
