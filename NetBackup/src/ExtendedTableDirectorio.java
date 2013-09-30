@@ -15,17 +15,23 @@ public class ExtendedTableDirectorio {
 	private boolean bExpandido = false;
 	private ArrayList<ProgressBar> barras = new ArrayList<ProgressBar>(); 
 	private ArrayList<Label> estados = new ArrayList<Label>(); 
-	 
+	private ArrayList<HBox> separadores = new ArrayList<HBox>();
+	private VBox contenedorPadre = null; 
 	
 	public ExtendedTableDirectorio(ArrayList<Transferencia> archivos, int id, VBox contenedorPadre, ArrayList<ProgressBar> alBarras, ArrayList<Label> alEstado, ArrayList<HBox> alFilas){
 		this.id = id;
 		this.archivos = archivos;
+		this.contenedorPadre = contenedorPadre;
 		
 		for (int i = 0; i < archivos.size(); i++){
 			HBox subFila = new HBox();
 			alFilas.add(subFila);
 			subFilas.add(subFila);
 			contenedorPadre.getChildren().add(subFila);
+			HBox separador = new HBox();
+			separador.setId("transferencias-separador");
+			separadores.add(separador);
+			contenedorPadre.getChildren().add(separador);
 			ProgressBar barra = new ProgressBar();
 			barra.setPrefSize(145, 15);
 			barra.setProgress(0.0);	
@@ -71,6 +77,7 @@ public class ExtendedTableDirectorio {
 				labelTamanyo.getStyleClass().add("extended-table-celda");
 				contTamanyo.getChildren().add(labelTamanyo);
 				filaActual.getChildren().addAll(contNombre, contEstado, contBarra, contTamanyo);
+				separadores.get(i).setPrefHeight(1);
 			}
 		}
 		else
@@ -78,6 +85,7 @@ public class ExtendedTableDirectorio {
 				HBox subFila = subFilas.get(i);
 				subFila.getChildren().clear();
 				subFila.setPrefHeight(0);
+				separadores.get(i).setPrefHeight(0);
 			}
 		
 	}
