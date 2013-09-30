@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -15,6 +16,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.effect.DropShadow;
@@ -136,9 +138,25 @@ public class NetBackup extends Application {
         Label labelNombre = new Label("NetBackup v0.1- Automatic backup for your files!!!");
         labelNombre.setStyle("-fx-text-fill: white; -fx-padding: 5 5 5 10");
         barraEstado.getChildren().add(labelNombre);
+        HBox contBarraProgreso = new HBox(5);
+        contBarraProgreso.setStyle("-fx-padding: 0 10 0 0");
+        contBarraProgreso.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(contBarraProgreso, Priority.ALWAYS);
+        barraEstado.getChildren().add(contBarraProgreso);
+        Label labelEtiTareaActual = new Label("Tarea actual: ");
+        labelEtiTareaActual.setStyle("-fx-text-fill: white;");
+        Label labelTareaActual = new Label("Ninguna");
+        labelTareaActual.setStyle("-fx-text-fill: white;");
+        ProgressBar barraTareaActual = new ProgressBar();
+        barraTareaActual.setPrefHeight(15);
+        barraTareaActual.setProgress(0.5);
+        
+        contBarraProgreso.getChildren().addAll(labelEtiTareaActual, labelTareaActual, barraTareaActual);
+        
         HBox contenedorOpciones = new HBox(5);
         contenedorOpciones.setId("contenedorOpciones");
         contenedorOpciones.setPrefSize(0, 30);
+        
         
         //------------------------BOTONES TOOLBAR---------------------------------
         //Boton Inicio
@@ -212,7 +230,20 @@ public class NetBackup extends Application {
         HBox contMenuCuerpo = new HBox(10);
         contMenuCuerpo.setStyle("-fx-padding: 10 10 10 10");
         VBox menuConfiguracion = new VBox();
+        DropShadow dropMenuConfig = new DropShadow();
+        dropMenuConfig.setRadius(5.0);
+        dropMenuConfig.setOffsetX(0.0);
+        dropMenuConfig.setOffsetY(3.0);
+        dropMenuConfig.setColor(Color.color(0.4, 0.5, 0.5));
+        menuConfiguracion.setEffect(dropShadow);
+
         cuerpoConfiguracion = new VBox(10);
+        DropShadow dropCuerpoConfig = new DropShadow();
+        dropCuerpoConfig.setRadius(5.0);
+        dropCuerpoConfig.setOffsetX(0.0);
+        dropCuerpoConfig.setOffsetY(3.0);
+        dropCuerpoConfig.setColor(Color.color(0.4, 0.5, 0.5));
+        cuerpoConfiguracion.setEffect(dropShadow);
         HBox.setHgrow(cuerpoConfiguracion, Priority.ALWAYS);
         ScrollPane scrollConfiguracion = new ScrollPane();
         scrollConfiguracion.setStyle("-fx-background-color: transparent; -fx-border-radius: 6; -fx-background-radius: 6");
@@ -338,16 +369,18 @@ public class NetBackup extends Application {
         panelInicio.setId("panel-inicio");
         
         HBox contConexionMod = new HBox(5);
+        VBox contExtConexion = new VBox(10);
         HBox contConexion = new HBox(10);
-        contConexion.setMaxSize(485, 180);
-        contConexion.setPrefSize(485, 180);
+        Label labelTituloConexion = new Label("ESTADO DE LA CONEXIÓN");
+        labelTituloConexion.setStyle("-fx-font-weight: bold; -fx-font-size: 14"); 
+        contExtConexion.getChildren().add(labelTituloConexion);
+        contExtConexion.getChildren().add(contConexion);
+        
         VBox contDetallesConexion = new VBox(5);
         DropShadow dsConexion = new DropShadow();
         dsConexion.setOffsetY(3.0);
         dsConexion.setOffsetX(3.0);
         dsConexion.setColor(Color.GRAY);
-        //contConexionMod.setEffect(dsConexion);
-        contConexion.setStyle("-fx-border-radius: 5;"); 
         ImageView ivServidor = new ImageView(new Image("images/server.png"));
         ivServidor.setFitHeight(128);
         ivServidor.setFitWidth(128);
@@ -386,20 +419,21 @@ public class NetBackup extends Application {
         contUsuarios.getChildren().addAll(labelEtiUsuarios, labelUsuarios);
         contRutaServidor.getChildren().addAll(labelEtiRutaServidor, labelRutaServidor);
         
-        contConexion.getStyleClass().add("detalles-conexion");
+        
+        contExtConexion.getStyleClass().add("detalles-conexion");
         contDetallesConexion.getChildren().addAll(contEstado, contUsuario, contEspacio, contUsuarios, contRutaServidor);
         contConexion.getChildren().add(ivServidor);
         contConexion.getChildren().add(contDetallesConexion);
         
         opcionInicio();
         //----------------------------MODULOS-----------------------------------------------------
+        VBox contExtModulos = new VBox();
+        contExtModulos.getStyleClass().add("detalles-conexion");
+        Label labelTituloModulos = new Label("MÓDULOS");
+        labelTituloModulos.setStyle("-fx-font-weight: bold; -fx-font-size: 14"); 
         HBox contModulos = new HBox();
-        DropShadow dsModulos = new DropShadow();
-        dsModulos.setOffsetY(3.0);
-        dsModulos.setOffsetX(3.0);
-        dsModulos.setColor(Color.GRAY);
-        //contModulos.setEffect(dsModulos);
-        
+        contExtModulos.getChildren().add(labelTituloModulos);
+        contExtModulos.getChildren().add(contModulos);
         contModulos.getStyleClass().add("detalles-conexion");
         HBox.setHgrow(contModulos, Priority.ALWAYS);
         ImageView ivModulos = new ImageView(new Image("images/puzzle.png"));
@@ -414,7 +448,6 @@ public class NetBackup extends Application {
         ivReal.setFitHeight(24);
         ivReal.setFitWidth(24);
         contTR.getChildren().addAll(labelEtiModReal, ivReal);
-        
         HBox contSincro = new HBox();
         Label labelEtiSincro = new Label("Módulo de sincronización:  ");
         labelEtiSincro.getStyleClass().add("label-inicio");
@@ -422,7 +455,6 @@ public class NetBackup extends Application {
         ivSincro.setFitHeight(24);
         ivSincro.setFitWidth(24);
         contSincro.getChildren().addAll(labelEtiSincro, ivSincro);
-        
         HBox contRestaurar = new HBox();
         Label labelEtiRestaurar = new Label("Módulo de restauración en un 1 click:  ");
         labelEtiRestaurar.getStyleClass().add("label-inicio");
@@ -430,7 +462,7 @@ public class NetBackup extends Application {
         ivRestaurar.setFitHeight(24);
         ivRestaurar.setFitWidth(24);
         contRestaurar.getChildren().addAll(labelEtiRestaurar, ivRestaurar);
-        
+        //Cont versiones
         HBox contVersiones = new HBox(5);
         Label labelEtiVersiones = new Label("Módulo de versiones: ");
         labelEtiVersiones.getStyleClass().add("label-inicio");
@@ -438,12 +470,10 @@ public class NetBackup extends Application {
         ivVersiones.setFitHeight(24);
         ivVersiones.setFitWidth(24);
         contVersiones.getChildren().addAll(labelEtiVersiones, ivVersiones);
-        
         contDetallesModulos.getChildren().addAll(contTR, contSincro, contRestaurar, contVersiones);
-        
         contModulos.getChildren().add(contDetallesModulos);
         //---------------------------------------------------------------------------------------
-        contConexionMod.getChildren().addAll(contConexion, contModulos);
+        contConexionMod.getChildren().addAll(contExtConexion, contExtModulos);
         panelInicio.getChildren().add(contConexionMod);
         //-------------------------------------------------------------------------
         //---------------------------------RESTAURACION CON UN CLIC-------------------------------
@@ -451,17 +481,17 @@ public class NetBackup extends Application {
         contModuloRestaurar.setMaxSize(485, 200);
         contModuloRestaurar.setPrefSize(485, 200);
         contModuloRestaurar.getStyleClass().add("detalles-conexion");
-        DropShadow dsRestaurar = new DropShadow();
-        dsRestaurar.setOffsetY(3.0);
-        dsRestaurar.setOffsetX(3.0);
-        dsRestaurar.setColor(Color.GRAY);
         Label labelTituloRestaurar = new Label("RESTAURACIÓN CON UN CLICK");
         labelTituloRestaurar.setStyle("-fx-font-weight: bold; -fx-font-size: 14"); 
         Label labelInfoRestaurar = new Label("La función de restauración le permite restaurar su equipo en caso de perdida de datos masiva. Todos los ficheros se ubicaran donde estaban ubicados antes de la perdida.");
         labelInfoRestaurar.getStyleClass().add("label-inicio");
         labelInfoRestaurar.setWrapText(true);
-        //contModuloRestaurar.setEffect(dsRestaurar);
-        contModuloRestaurar.getChildren().addAll(labelTituloRestaurar,labelInfoRestaurar);
+        HBox contBotonRestaurar = new HBox(100);
+        Button botonRestaurar = new Button("Restaurar");
+        Label labelUltimaCopia = new Label("Última copia: 23/10/2013 18:55");
+        contBotonRestaurar.getChildren().addAll(labelUltimaCopia, botonRestaurar);
+        HBox.setHgrow(contBotonRestaurar, Priority.ALWAYS);
+        contModuloRestaurar.getChildren().addAll(labelTituloRestaurar,labelInfoRestaurar, contBotonRestaurar);
         panelInicio.getChildren().add(contModuloRestaurar);
         //----------------------------------------------------------------------------------------
         
