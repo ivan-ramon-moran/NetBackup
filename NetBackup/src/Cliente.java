@@ -117,8 +117,7 @@ public class Cliente {
 					  labelEstado.setText("Completado");
 				  }
 			});
-			
-			System.out.println("PENE" + transferencia.getIdTransferencia());
+		
 			if (transferencia.getIdTransferencia() % 2 == 0){
 				fila.setStyle("extended-table-fila-par");
 			}

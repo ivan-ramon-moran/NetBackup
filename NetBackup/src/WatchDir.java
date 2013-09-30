@@ -160,7 +160,7 @@ public class WatchDir {
                 	if (!child.toString().contains("~")){
 	                	final File file = new File(child.toString());
 		                
-		                if (file.length() != 0){		                	
+		                if (file.length() != 0 && !file.isDirectory()){		                	
 		                	//AQUI se produce una modificación en el sistema de archivos
 	                		//System.out.println(child.toString());
 	                		DecimalFormat df = new DecimalFormat("#.##");
@@ -174,13 +174,14 @@ public class WatchDir {
   	                		ContadorItems.incrementarNumero();
 		                }
 		                
+		                //Si se ha creado un nuevo directorio
 		                if (file.isDirectory()){
 		                	String [] ficheros = file.list();
 		                	
 		                	for (int i = 0; i < ficheros.length; i++){
-			                	if (file.length() != 0){
-			                		final File file2 = new File(file.getAbsolutePath() + "\\" + ficheros[i]);
-	
+			                	final File file2 = new File(file.getAbsolutePath() + "\\" + ficheros[i]);
+			                		
+		                		if (!file2.isDirectory() && file2.length() != 0){
 			                		Platform.runLater(new Runnable() {
 			                			  @Override
 			                			  public void run() {
@@ -189,7 +190,8 @@ public class WatchDir {
 			                			});
 			                		colaTransferencias.encolar(new Transferencia(file2.getAbsolutePath(), file2.getName(),obtenerTamanyo(file2.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
 		  	                		ContadorItems.incrementarNumero();
-			                	}
+		                		}
+			                	
 		                	}
 		                		
 		                }

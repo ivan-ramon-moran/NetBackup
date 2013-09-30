@@ -125,6 +125,66 @@ public class ExtendedTable extends ScrollPane{
 		iNumeroItems++;
 	}
 	
+	public void addDirectory(String nombreDir){
+		final HBox fila = new HBox();
+		fila.setPrefHeight(27);
+		
+		if (iNumeroItems % 2 == 0)
+			fila.getStyleClass().add("extended-table-fila-par");
+		else
+			fila.getStyleClass().add("extended-table-fila-impar");
+
+			
+		alFilas.add(fila);
+		fila.setOnMouseClicked(new EventHandler<MouseEvent>(){
+			@Override
+	        public void handle(MouseEvent me) {
+				for (int i = 0; i < alFilas.size(); i++){
+					alFilas.get(i).setStyle("-fx-background-color: transparent");
+				}
+				
+				fila.setStyle("-fx-background-color: rgb(48,109,202);");
+			}
+		});
+		
+		HBox contNombre = new HBox();
+		contNombre.setPrefWidth(400);
+		Label labelNombre = new Label(nombreDir);
+		labelNombre.getStyleClass().add("extended-table-celda");
+		contNombre.getChildren().add(labelNombre);
+		fila.getChildren().add(contNombre);
+		HBox contEstado = new HBox();
+		contEstado.setPrefWidth(100);
+		Label labelEstado = new Label("En cola");
+		alEstado.add(labelEstado);
+		labelEstado.getStyleClass().add("extended-table-celda");
+		contEstado.getChildren().add(labelEstado);
+		fila.getChildren().add(contEstado);
+		HBox contBarra = new HBox();
+		contBarra.setPadding(new Insets(6,0,0,5));
+		contBarra.setPrefWidth(153);
+		ProgressBar barra = new ProgressBar();
+		/*Insertamos la barra en el vector de barras, para poder luego acceder a ella
+		en el transcurso de la transferencia.*/
+		alBarras.add(barra);
+		barra.setPrefSize(145, 15);
+		barra.setProgress(0.0);
+		contBarra.getChildren().add(barra);
+		fila.getChildren().add(contBarra);
+		HBox contTamanyo = new HBox();
+		Label labelTamanyo = new Label("Sin establecer");
+		labelTamanyo.getStyleClass().add("extended-table-celda");
+		contTamanyo.getChildren().add(labelTamanyo);
+		fila.getChildren().add(contTamanyo);
+		this.contenedorPrincipal.getChildren().add(fila);
+		HBox separador = new HBox();
+		separador.setId("transferencias-separador");
+		separador.setPrefHeight(1);
+		contenedorPrincipal.getChildren().add(separador);
+		iNumeroItems++;
+		
+	}
+	
 	public ProgressBar getProgressBar(int indice){
 		return this.alBarras.get(indice);
 	}

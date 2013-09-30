@@ -434,13 +434,13 @@ public class NetBackup extends Application {
         HBox contModulos = new HBox();
         contExtModulos.getChildren().add(labelTituloModulos);
         contExtModulos.getChildren().add(contModulos);
-        contModulos.getStyleClass().add("detalles-conexion");
+        contExtModulos.getStyleClass().add("detalles-conexion");
         HBox.setHgrow(contModulos, Priority.ALWAYS);
         ImageView ivModulos = new ImageView(new Image("images/puzzle.png"));
         ivModulos.setFitHeight(128);
         ivModulos.setFitWidth(128);
         contModulos.getChildren().add(ivModulos);
-        VBox contDetallesModulos = new VBox(5);
+        VBox contDetallesModulos = new VBox();
         HBox contTR = new HBox();
         Label labelEtiModReal = new Label("Copia de seguridad en tiempo real: ");
         labelEtiModReal.getStyleClass().add("label-inicio");
@@ -532,6 +532,9 @@ public class NetBackup extends Application {
             	//tEnvio.pararThread();
             }
         });
+        
+        transferencias.addDirectory("Nueva Carpeta");
+        
         primaryStage.show();
     }
     
