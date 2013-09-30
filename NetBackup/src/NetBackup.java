@@ -533,8 +533,6 @@ public class NetBackup extends Application {
             }
         });
         
-        transferencias.addDirectory("Nueva Carpeta");
-        
         primaryStage.show();
     }
     

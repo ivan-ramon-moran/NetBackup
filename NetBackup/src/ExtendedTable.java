@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -18,6 +20,8 @@ public class ExtendedTable extends ScrollPane{
 	private ArrayList<ProgressBar> alBarras = new ArrayList<ProgressBar>(); 
 	private ArrayList<Label> alEstado = new ArrayList<Label>();
 	private ArrayList<HBox> alFilas = new ArrayList<HBox>(); 
+	private ArrayList<ExtendedTableDirectorio> directorios = new ArrayList<ExtendedTableDirectorio>(); 
+
 	private VBox contenedorPrincipal = null;
 	private int iNumeroItems = 0;
 	
@@ -69,7 +73,7 @@ public class ExtendedTable extends ScrollPane{
 	public void addItem(Transferencia transferencia){
 		final HBox fila = new HBox();
 		fila.setPrefHeight(27);
-		
+	
 		if (iNumeroItems % 2 == 0)
 			fila.getStyleClass().add("extended-table-fila-par");
 		else
@@ -108,7 +112,7 @@ public class ExtendedTable extends ScrollPane{
 		/*Insertamos la barra en el vector de barras, para poder luego acceder a ella
 		en el transcurso de la transferencia.*/
 		alBarras.add(barra);
-		barra.setPrefSize(145, 15);
+		//barra.setPrefSize(145, 15);
 		barra.setProgress(0.0);
 		contBarra.getChildren().add(barra);
 		fila.getChildren().add(contBarra);
@@ -125,7 +129,7 @@ public class ExtendedTable extends ScrollPane{
 		iNumeroItems++;
 	}
 	
-	public void addDirectory(String nombreDir){
+	public void addDirectory(String nombreDir, ArrayList<Transferencia> transferencias){
 		final HBox fila = new HBox();
 		fila.setPrefHeight(27);
 		
@@ -136,7 +140,7 @@ public class ExtendedTable extends ScrollPane{
 
 			
 		alFilas.add(fila);
-		fila.setOnMouseClicked(new EventHandler<MouseEvent>(){
+		/*fila.setOnMouseClicked(new EventHandler<MouseEvent>(){
 			@Override
 	        public void handle(MouseEvent me) {
 				for (int i = 0; i < alFilas.size(); i++){
@@ -145,18 +149,43 @@ public class ExtendedTable extends ScrollPane{
 				
 				fila.setStyle("-fx-background-color: rgb(48,109,202);");
 			}
-		});
+		});*/
 		
 		HBox contNombre = new HBox();
-		contNombre.setPrefWidth(400);
+		HBox contExpandir = new HBox();
+		contExpandir.setStyle("-fx-padding: 3 0 0 0");
+		ExtendedTableExpander expander = new ExtendedTableExpander(iNumeroItems);
+		contExpandir.getChildren().add(expander);
+		
+		expander.setOnMouseClicked(new EventHandler<MouseEvent>(){
+			@Override
+	        public void handle(MouseEvent me) {
+				ExtendedTableExpander exp = (ExtendedTableExpander)me.getTarget();
+				int id = exp.getID();
+				System.out.println("ID: " + id);
+				ExtendedTableDirectorio dir = directorios.get(id);
+				dir.expandir();		
+				
+				if (dir.getExpandido())
+					dir.setExpandido(false);
+				else
+					dir.setExpandido(true);
+				
+			}
+		});
+		
+		
+		contNombre.setPrefWidth(377);
+		fila.getChildren().add(contExpandir);
+		
 		Label labelNombre = new Label(nombreDir);
 		labelNombre.getStyleClass().add("extended-table-celda");
-		contNombre.getChildren().add(labelNombre);
+		contNombre.getChildren().addAll(labelNombre);
 		fila.getChildren().add(contNombre);
 		HBox contEstado = new HBox();
 		contEstado.setPrefWidth(100);
 		Label labelEstado = new Label("En cola");
-		alEstado.add(labelEstado);
+		//alEstado.add(labelEstado);
 		labelEstado.getStyleClass().add("extended-table-celda");
 		contEstado.getChildren().add(labelEstado);
 		fila.getChildren().add(contEstado);
@@ -166,7 +195,7 @@ public class ExtendedTable extends ScrollPane{
 		ProgressBar barra = new ProgressBar();
 		/*Insertamos la barra en el vector de barras, para poder luego acceder a ella
 		en el transcurso de la transferencia.*/
-		alBarras.add(barra);
+		//alBarras.add(barra);
 		barra.setPrefSize(145, 15);
 		barra.setProgress(0.0);
 		contBarra.getChildren().add(barra);
@@ -181,8 +210,10 @@ public class ExtendedTable extends ScrollPane{
 		separador.setId("transferencias-separador");
 		separador.setPrefHeight(1);
 		contenedorPrincipal.getChildren().add(separador);
-		iNumeroItems++;
 		
+		ExtendedTableDirectorio dir = new ExtendedTableDirectorio(transferencias, iNumeroItems, this.contenedorPrincipal, this.alBarras, this.alEstado, this.alFilas);
+		directorios.add(dir);
+		iNumeroItems++;
 	}
 	
 	public ProgressBar getProgressBar(int indice){

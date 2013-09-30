@@ -151,7 +151,7 @@ public class WatchDir {
                 // Context for directory entry event is the file name of entry
                 WatchEvent<Path> ev = cast(event);
                 Path name = ev.context();
-                Path child = dir.resolve(name);
+                final Path child = dir.resolve(name);
 
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
@@ -177,22 +177,25 @@ public class WatchDir {
 		                //Si se ha creado un nuevo directorio
 		                if (file.isDirectory()){
 		                	String [] ficheros = file.list();
+		                	final ArrayList<Transferencia> aFicheros = new ArrayList<Transferencia>();
 		                	
 		                	for (int i = 0; i < ficheros.length; i++){
 			                	final File file2 = new File(file.getAbsolutePath() + "\\" + ficheros[i]);
 			                		
 		                		if (!file2.isDirectory() && file2.length() != 0){
-			                		Platform.runLater(new Runnable() {
-			                			  @Override
-			                			  public void run() {
-			      	                		transferencias.addItem(new Transferencia(file2.getAbsolutePath(), file2.getName(), obtenerTamanyo(file2.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
-			                			  }
-			                			});
+		                			aFicheros.add(new Transferencia(file2.getAbsolutePath(), file2.getName(), obtenerTamanyo(file2.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));			                			 
 			                		colaTransferencias.encolar(new Transferencia(file2.getAbsolutePath(), file2.getName(),obtenerTamanyo(file2.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
 		  	                		ContadorItems.incrementarNumero();
 		                		}
-			                	
+		                					                	
 		                	}
+		                	
+		                	Platform.runLater(new Runnable() {
+	                			  @Override
+	                			  public void run() {
+	                				  transferencias.addDirectory(file.getName(), aFicheros);
+	                			  }
+                			});  
 		                		
 		                }
 		                	
