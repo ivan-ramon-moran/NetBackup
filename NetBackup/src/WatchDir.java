@@ -157,7 +157,7 @@ public class WatchDir {
                 System.out.format("%s: %s\n", event.kind().name(), child);
                 
                 if (event.kind().name().equals("ENTRY_CREATE")){
-	                if (!child.toString().contains("~")){
+                	if (!child.toString().contains("~")){
 	                	final File file = new File(child.toString());
 		                
 		                if (file.length() != 0){		                	
@@ -173,6 +173,27 @@ public class WatchDir {
 	                		colaTransferencias.encolar(new Transferencia(child.toString(), file.getName(),obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
   	                		ContadorItems.incrementarNumero();
 		                }
+		                
+		                if (file.isDirectory()){
+		                	String [] ficheros = file.list();
+		                	
+		                	for (int i = 0; i < ficheros.length; i++){
+			                	if (file.length() != 0){
+			                		final File file2 = new File(file.getAbsolutePath() + "\\" + ficheros[i]);
+	
+			                		Platform.runLater(new Runnable() {
+			                			  @Override
+			                			  public void run() {
+			      	                		transferencias.addItem(new Transferencia(file2.getAbsolutePath(), file2.getName(), obtenerTamanyo(file2.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+			                			  }
+			                			});
+			                		colaTransferencias.encolar(new Transferencia(file2.getAbsolutePath(), file2.getName(),obtenerTamanyo(file2.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+		  	                		ContadorItems.incrementarNumero();
+			                	}
+		                	}
+		                		
+		                }
+		                	
 		                
 	                }
                 }

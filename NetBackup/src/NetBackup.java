@@ -387,7 +387,7 @@ public class NetBackup extends Application {
         HBox contEstado = new HBox(90);
         Label labelEtiEstado = new Label("Estado: ");
         labelEtiEstado.getStyleClass().add("label-inicio");
-        Label labelEstado = new Label("Sin conexion...");
+        Label labelEstado = new Label("Intentando conectarse al servidor");
         labelEstado.getStyleClass().add("label-inicio");
         HBox contUsuario = new HBox(84);
         Label labelEtiUsuario = new Label("Usuario: ");
