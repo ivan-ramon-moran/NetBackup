@@ -112,7 +112,7 @@ public class ExtendedTable extends ScrollPane{
 		/*Insertamos la barra en el vector de barras, para poder luego acceder a ella
 		en el transcurso de la transferencia.*/
 		alBarras.add(barra);
-		//barra.setPrefSize(145, 15);
+		barra.setPrefSize(145, 15);
 		barra.setProgress(0.0);
 		contBarra.getChildren().add(barra);
 		fila.getChildren().add(contBarra);

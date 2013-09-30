@@ -41,6 +41,13 @@ public class ExtendedTableDirectorio {
 		if (!bExpandido){
 			for (int i = 0; i < subFilas.size(); i++){
 				HBox filaActual = subFilas.get(i);
+				
+				if (i % 2 == 0)
+					filaActual.getStyleClass().add("extended-table-fila-par");
+				else
+					filaActual.getStyleClass().add("extended-table-fila-impar");
+
+				
 				Transferencia transferencia = archivos.get(i);
 				filaActual.setPrefHeight(27);
 				filaActual.setStyle("-fx-padding: 0 0 0 60");
