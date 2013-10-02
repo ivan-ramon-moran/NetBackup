@@ -111,7 +111,7 @@ public Ventana () {
 			
 			primaryStage.initStyle( StageStyle.UNDECORATED );
 			
-			Scene scene = new Scene(root,420,275);
+			Scene scene = new Scene(root,475,275);
 			scene.getStylesheets().add("ventana.styles.css");
 			
 			
