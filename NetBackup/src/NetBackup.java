@@ -63,6 +63,10 @@ public class NetBackup extends Application {
     	//------------------------USUARIO DEL SISTEMA-----------------------------
     	usuarioSistema = new UsuarioSistema();
     	//------------------------------------------------------------------------
+    	//------------------------SISTEMA OPERATIVO-------------------------------
+    	System.out.println(SistemaOperativo.getSistema());
+    	System.out.println(SistemaOperativo.isWindows());
+    	//------------------------------------------------------------------------
     	//----------------------INICIAMOS EL CLIENTE------------------------------
     	IniciarCliente();
     	//------------------------------------------------------------------------
