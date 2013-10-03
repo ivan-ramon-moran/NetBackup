@@ -23,4 +23,15 @@ public class SistemaOperativo {
 		
 		return ruta;
 	}
+	
+	public static char getSeparador (){
+		char barra = 0;
+		if (isWindows()){
+			barra = '\\';
+		}
+		if (isLinux()){
+			barra = '/';
+		}
+		return barra;
+	}
 }
