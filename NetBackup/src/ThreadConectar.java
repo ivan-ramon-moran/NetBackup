@@ -10,7 +10,7 @@ public class ThreadConectar extends Thread{
 	
 	public void run(){
     	while (!cliente.isConnected() && bEjecutar){
-    		cliente.conectar("192.168.1.200", 65432);
+    		cliente.conectar("localhost", 65432);
     		try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {
