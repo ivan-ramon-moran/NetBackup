@@ -14,24 +14,26 @@ public class SistemaOperativo {
 	
 	public static String getPath(String nombre){
 		String ruta = "";
-		if (isWindows()){
+		
+		if (isWindows())
 			ruta = ("C:\\Users\\" + nombre + "\\Desktop");
-		}
-		if (isLinux()){
+		
+		if (isLinux())
 			ruta = ("/home/" + nombre + "/Escritorio");
-		}
+		
 		
 		return ruta;
 	}
 	
 	public static char getSeparador (){
 		char barra = 0;
-		if (isWindows()){
+		
+		if (isWindows())
 			barra = '\\';
-		}
-		if (isLinux()){
+		
+		if (isLinux())
 			barra = '/';
-		}
+		
 		return barra;
 	}
 }
