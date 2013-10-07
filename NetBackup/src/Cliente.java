@@ -68,6 +68,15 @@ public class Cliente {
 		}
 	}
 	
+	public void enviarNumero(int _numero){
+		try {
+			dos.writeInt(_numero);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void enviarArchivo(Transferencia transferencia)
 	{
 		byte [] data = new byte[65536];
@@ -181,6 +190,12 @@ public class Cliente {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public boolean recibirOK() throws IOException{
+		boolean reply = ddis.readBoolean();
+		
+		return reply;
 	}
 	
 }

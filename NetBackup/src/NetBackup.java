@@ -41,8 +41,8 @@ public class NetBackup extends Application {
 	private StackPane paneles;
 	private VBox panelExploracion, panelTransferencias, panelInicio, panelConfiguracion;
 	private ThreadFileMonitor tFileMonitor = null;
-	private ThreadConectar tConectar = null;
-	private Cliente cliente = null;
+	private ThreadConectar tConectar = null, tConectarMsg = null;
+	private Cliente cliente = null, clienteMsg = null;
 	private Cola colaTransferencias = new Cola();
 	private ThreadEnvio tEnvio = null;
 	private ExtendedTable transferencias = new ExtendedTable();
@@ -51,6 +51,7 @@ public class NetBackup extends Application {
 	private VBox cuerpoConfiguracion;
 	private UsuarioSistema usuarioSistema = null;
 	private Ventana logging = null;
+	private Label lElementoActual = null;
 	
 	public static void main(String[] args) {
         launch(args);
@@ -67,9 +68,7 @@ public class NetBackup extends Application {
     	System.out.println(SistemaOperativo.getSistema());
     	System.out.println(SistemaOperativo.isWindows());
     	//------------------------------------------------------------------------
-    	//----------------------INICIAMOS EL CLIENTE------------------------------
-    	IniciarCliente();
-    	//------------------------------------------------------------------------
+    	
     	
     	final Stage ptrStage = primaryStage;
     	primaryStage.initStyle(StageStyle.TRANSPARENT);
@@ -498,7 +497,13 @@ public class NetBackup extends Application {
         Label labelUltimaCopia = new Label("Última copia: 23/10/2013 18:55");
         contBotonRestaurar.getChildren().addAll(labelUltimaCopia, botonRestaurar);
         HBox.setHgrow(contBotonRestaurar, Priority.ALWAYS);
-        contModuloRestaurar.getChildren().addAll(labelTituloRestaurar,labelInfoRestaurar, contBotonRestaurar);
+        Label lEtiElementoActual = new Label("Sincronizando actualmente: ");
+        lElementoActual = new Label("En reposo...");
+        HBox contActual = new HBox();
+        contActual.getChildren().addAll(lEtiElementoActual, lElementoActual);
+        
+        contModuloRestaurar.getChildren().addAll(labelTituloRestaurar,labelInfoRestaurar, contBotonRestaurar, contActual);
+        
         panelInicio.getChildren().add(contModuloRestaurar);
         //----------------------------------------------------------------------------------------
         
@@ -537,10 +542,15 @@ public class NetBackup extends Application {
             	tFileMonitor.interrupt();
             	tConectar.pararThread();
             	//tEnvio.pararThread();
+            	//tSincro.pararThread();
             }
         });
         
         primaryStage.show();
+        
+      //----------------------INICIAMOS EL CLIENTE------------------------------
+    	IniciarCliente();
+    	//------------------------------------------------------------------------
     }
     
     void OpcionExplorarServidor(){
@@ -567,13 +577,19 @@ public class NetBackup extends Application {
     void IniciarCliente()
     {
     	cliente = new Cliente(colaTransferencias, transferencias);
+    	clienteMsg = new Cliente(colaTransferencias, transferencias);
     	tConectar = new ThreadConectar(cliente);
     	tConectar.start();
+    	tConectarMsg = new ThreadConectar(clienteMsg);
+    	tConectarMsg.start();
+    	
     	tEnvio = new ThreadEnvio(cliente, colaTransferencias, transferencias);
     	tEnvio.start();
     	//Este thread solo la primera vez!
     	//ThreadCDSensibles tDatos = new ThreadCDSensibles("C:\\Users\\" + usuarioSistema.getUsuario(), colaTransferencias, transferencias);
     	//tDatos.start();
+    	ThreadSincronizacion tSincro = new ThreadSincronizacion("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop", clienteMsg, lElementoActual);
+    	tSincro.start();
     }
     
     void generarConfiguracionGeneral(){ 
