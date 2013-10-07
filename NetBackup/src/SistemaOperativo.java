@@ -37,4 +37,29 @@ public class SistemaOperativo {
 		}
 	}
 	
+	public static String getPath(String nombre){
+		String ruta = "";
+		
+		if (isWindows())
+			ruta = ("C:\\Users\\" + nombre + "\\Desktop");
+		
+		if (isLinux())
+			ruta = ("/home/" + nombre + "/Escritorio");
+		
+		
+		return ruta;
+	}
+	
+	public static char getSeparador (){
+		char barra = 0;
+		
+		if (isWindows())
+			barra = '\\';
+		
+		if (isLinux())
+			barra = '/';
+		
+		return barra;
+	}
+	
 }
