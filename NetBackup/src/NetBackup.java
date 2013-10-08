@@ -588,7 +588,7 @@ public class NetBackup extends Application {
     	//Este thread solo la primera vez!
     	//ThreadCDSensibles tDatos = new ThreadCDSensibles("C:\\Users\\" + usuarioSistema.getUsuario(), colaTransferencias, transferencias);
     	//tDatos.start();
-    	ThreadSincronizacion tSincro = new ThreadSincronizacion("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop\\sss", clienteMsg, lElementoActual, colaTransferencias, transferencias);
+    	ThreadSincronizacion tSincro = new ThreadSincronizacion("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop\\aaa", clienteMsg, lElementoActual, colaTransferencias, transferencias);
     	tSincro.start();
     }
     

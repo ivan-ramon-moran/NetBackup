@@ -44,7 +44,7 @@ public class ThreadSincronizacion extends Thread {
 			clienteMsg.enviarNumero(ptrFicheros.size());
 			//Enviamos todos los archivos y esperamos respuesta, si el archivo no se encuentra en el servidor, lo copiamos
 			for (int i = 0; i < ptrFicheros.size(); i++){
-				FicheroSincronizacion fSin = ptrFicheros.get(i);
+				final FicheroSincronizacion fSin = ptrFicheros.get(i);
 				final String strElementoActual = fSin.getNombreFichero();
 
 				clienteMsg.enviarObjeto(fSin);
@@ -58,7 +58,14 @@ public class ThreadSincronizacion extends Thread {
 					
 					if (!bExiste){
 						colaTransferencias.encolar(new Transferencia(fSin.getRutaFichero(), fSin.getNombreFichero(),"0", "Archivo", "En cola...", ContadorItems.getNumeroItems()));
-	                	transferencias.addItem(new Transferencia(fSin.getRutaFichero(), fSin.getNombreFichero(), "0", "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+	                	Platform.runLater(new Runnable(){
+	                		@Override
+							public void run() {
+								// TODO Auto-generated method stub
+	    						transferencias.addItem(new Transferencia(fSin.getRutaFichero(), fSin.getNombreFichero(), "0", "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+							}
+	                		
+	                	});
 						ContadorItems.incrementarNumero();					
 	                }
 					
@@ -77,7 +84,10 @@ public class ThreadSincronizacion extends Thread {
 			
 			//El thread se ejecuta cada 60 segundos
 			try {
+				//Si la cola de transferencias no esta vacia, volvemos a esperar X tiempo otra vez
 				Thread.sleep(55000);
+				while (!colaTransferencias.colaVacia())
+					Thread.sleep(55000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
