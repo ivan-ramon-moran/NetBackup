@@ -1,3 +1,4 @@
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -29,8 +30,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -549,9 +548,9 @@ public class NetBackup extends Application {
         
         primaryStage.show();
         
-      //----------------------INICIAMOS EL CLIENTE------------------------------
+        //----------------------INICIAMOS EL CLIENTE------------------------------
     	IniciarCliente();
-    	//------------------------------------------------------------------------
+    	//------------------------------------------------------------------------    	
     }
     
     void OpcionExplorarServidor(){
@@ -589,7 +588,7 @@ public class NetBackup extends Application {
     	//Este thread solo la primera vez!
     	//ThreadCDSensibles tDatos = new ThreadCDSensibles("C:\\Users\\" + usuarioSistema.getUsuario(), colaTransferencias, transferencias);
     	//tDatos.start();
-    	ThreadSincronizacion tSincro = new ThreadSincronizacion("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop", clienteMsg, lElementoActual);
+    	ThreadSincronizacion tSincro = new ThreadSincronizacion("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop\\sss", clienteMsg, lElementoActual, colaTransferencias, transferencias);
     	tSincro.start();
     }
     

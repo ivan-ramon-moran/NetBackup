@@ -12,17 +12,29 @@ public class ThreadSincronizacion extends Thread {
 	private Cliente clienteMsg = null;
 	private ArrayList<FicheroSincronizacion> ptrFicheros = SistemaOperativo.ficheros;
 	private Label labelArchivos = null;
+	private Cola colaTransferencias = null;
+	private ExtendedTable transferencias = null;
 	
-	public ThreadSincronizacion(String _path, Cliente _clienteMsg, Label _labelArchivos){
+	public ThreadSincronizacion(String _path, Cliente _clienteMsg, Label _labelArchivos, Cola _colaTransferencias, ExtendedTable _transferencias){
 		this.path = _path;
 		this.clienteMsg = _clienteMsg;
 		this.labelArchivos = _labelArchivos;
+		this.colaTransferencias = _colaTransferencias;
+		this.transferencias = _transferencias;
 	}
 	
 	public void run(){
 		boolean bExiste;
 		
 		while (bEjecutar){
+			//El thread se ejecuta cada 60 segundos
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			//Limpiamos el ArrayList para que este limpio en cada iteración
 			SistemaOperativo.ficheros.clear();
 			//Buscamos los ficheros en el path que nos pasan como parametro de entrada.
@@ -32,21 +44,29 @@ public class ThreadSincronizacion extends Thread {
 			clienteMsg.enviarNumero(ptrFicheros.size());
 			//Enviamos todos los archivos y esperamos respuesta, si el archivo no se encuentra en el servidor, lo copiamos
 			for (int i = 0; i < ptrFicheros.size(); i++){
-				final String strElementoActual = ptrFicheros.get(i).getNombreFichero();
-				clienteMsg.enviarObjeto(ptrFicheros.get(i));
-				/*
+				FicheroSincronizacion fSin = ptrFicheros.get(i);
+				final String strElementoActual = fSin.getNombreFichero();
+
+				clienteMsg.enviarObjeto(fSin);
+				
 				try {
 					bExiste = clienteMsg.recibirBoolean();
 					System.out.println(bExiste);
 					
-					Si no existe, enviamos el fichero, mediante el socket de ficheros, añadiendolo
-					 a la lista de transferencias.
+					/*Si no existe, enviamos el fichero, mediante el socket de ficheros, añadiendolo
+					 a la lista de transferencias.*/
+					
+					if (!bExiste){
+						colaTransferencias.encolar(new Transferencia(fSin.getRutaFichero(), fSin.getNombreFichero(),"0", "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+	                	transferencias.addItem(new Transferencia(fSin.getRutaFichero(), fSin.getNombreFichero(), "0", "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+						ContadorItems.incrementarNumero();					
+	                }
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				*/
+				
 				
 				Platform.runLater(new Runnable(){
 					public void run(){
@@ -54,15 +74,14 @@ public class ThreadSincronizacion extends Thread {
 					}
 				});
 			}	
-				
 			
 			//El thread se ejecuta cada 60 segundos
 			try {
-				Thread.sleep(60000);
+				Thread.sleep(55000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}	
 		}
 	}
 	

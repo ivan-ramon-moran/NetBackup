@@ -31,6 +31,7 @@ public class ExtendedTable extends ScrollPane{
 		//el hbox que contendra las columnas
 		contenedorColumnas = new HBox();
 		contenedorColumnas.setPrefHeight(30);
+		contenedorColumnas.setMinHeight(30);
 		contenedorColumnas.setId("extended-table-header");
 		contenedorPrincipal.getChildren().add(contenedorColumnas);
 		HBox separador = new HBox();
@@ -73,7 +74,8 @@ public class ExtendedTable extends ScrollPane{
 	public void addItem(Transferencia transferencia){
 		final HBox fila = new HBox();
 		fila.setPrefHeight(27);
-	
+		fila.setMinHeight(27);
+
 		if (iNumeroItems % 2 == 0)
 			fila.getStyleClass().add("extended-table-fila-par");
 		else

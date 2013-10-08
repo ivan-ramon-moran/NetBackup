@@ -35,7 +35,6 @@ public class Cliente {
 			if (cliente.isConnected()){
 				dos = new ObjectOutputStream(cliente.getOutputStream());
 				ddis = new ObjectInputStream(cliente.getInputStream());
-				dos.flush();
 				String nombreUsuario = "k3rnel";
 				String password = "admin";
 				enviarObjeto(nombreUsuario);
@@ -100,8 +99,8 @@ public class Cliente {
 			//Enviamos la operacion que vamos a realizar
 			enviarCadena(new String("0"));
 			enviarCadena(new String(file.getName()));
-			long tamanyoFichero = file.length();
-			dos.writeLong(tamanyoFichero);
+			Long tamanyoFichero = new Long(file.length());
+			dos.writeObject(tamanyoFichero);
 			
 			while ((numBytes = dis.read(data)) > 0)
 			{	
@@ -198,7 +197,13 @@ public class Cliente {
 	}
 	
 	public boolean recibirBoolean() throws IOException{
-		boolean reply = ddis.readBoolean();
+		boolean reply = true;
+		try {
+			reply = (Boolean)ddis.readObject();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return reply;
 	}
