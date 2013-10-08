@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class SistemaOperativo {
 	
-	public static ArrayList<String> ficheros = new ArrayList<String>();
+	public static ArrayList<FicheroSincronizacion> ficheros = new ArrayList<FicheroSincronizacion>();
 	
 	public static String getSistema(){
 		return System.getProperty("os.name" );
@@ -31,7 +31,7 @@ public class SistemaOperativo {
 					buscarDatosSensibles(ruta + "/" + file2.getName());
 				}
 				else{
-					ficheros.add(file2.getName());
+					ficheros.add(new FicheroSincronizacion(file2.getAbsolutePath(), file2.getName()));
 				}
 			}
 		}

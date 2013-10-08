@@ -532,7 +532,6 @@ public class NetBackup extends Application {
         //------------------------FILE MONITOR--------------------------------------
         String nombre_usuario = usuarioSistema.getUsuario();
         Path dir = Paths.get(SistemaOperativo.getPath(nombre_usuario));
-        //Path dir = Paths.get("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop");
         tFileMonitor = new ThreadFileMonitor(dir, cliente, transferencias, colaTransferencias);
         tFileMonitor.start();
         //--------------------------------------------------------------------------

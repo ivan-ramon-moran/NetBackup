@@ -1,12 +1,12 @@
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.text.DecimalFormat;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -16,8 +16,8 @@ import javafx.scene.layout.HBox;
 public class Cliente {
 	
 	private Socket cliente = null;
-	private DataOutputStream dos = null;
-	private DataInputStream ddis = null;
+	private ObjectOutputStream dos = null;
+	private ObjectInputStream ddis = null;
 	private Cola colaTransferencias = null;
 	private ExtendedTable transferencias = null;
 	private Label labelEstado = null;
@@ -28,18 +28,24 @@ public class Cliente {
 	}
 	
 	public int conectar(String direccion, int puerto){
-		int iResultado = 0;
+		Integer iResultado = 0;
 		try {
 			cliente = new Socket(direccion, puerto);
 			
 			if (cliente.isConnected()){
-				dos = new DataOutputStream(cliente.getOutputStream());
-				ddis = new DataInputStream(cliente.getInputStream());
+				dos = new ObjectOutputStream(cliente.getOutputStream());
+				ddis = new ObjectInputStream(cliente.getInputStream());
+				dos.flush();
 				String nombreUsuario = "k3rnel";
 				String password = "admin";
-				dos.writeUTF(nombreUsuario);
-				dos.writeUTF(password);
-				iResultado = ddis.readInt();
+				enviarObjeto(nombreUsuario);
+				enviarObjeto(password);
+				try {
+					iResultado = (Integer)ddis.readObject();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				if (iResultado != 1){
 					cliente.close();
@@ -60,21 +66,11 @@ public class Cliente {
 	
 	public void enviarCadena(String cadena)
 	{
-		try {
-			dos.writeUTF(cadena);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		enviarObjeto(cadena);
 	}
 	
 	public void enviarNumero(int _numero){
-		try {
-			dos.writeInt(_numero);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		enviarObjeto(new Integer(_numero));
 	}
 	
 	public void enviarArchivo(Transferencia transferencia)
@@ -102,8 +98,8 @@ public class Cliente {
 		try{
 			DataInputStream dis = new DataInputStream(new FileInputStream(transferencia.getRutaArchivo()));
 			//Enviamos la operacion que vamos a realizar
-			enviarCadena("0");
-			enviarCadena(file.getName());
+			enviarCadena(new String("0"));
+			enviarCadena(new String(file.getName()));
 			long tamanyoFichero = file.length();
 			dos.writeLong(tamanyoFichero);
 			
@@ -192,7 +188,16 @@ public class Cliente {
 		}
 	}
 	
-	public boolean recibirOK() throws IOException{
+	public void enviarObjeto(Object object){
+		try {
+			dos.writeObject(object);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean recibirBoolean() throws IOException{
 		boolean reply = ddis.readBoolean();
 		
 		return reply;
