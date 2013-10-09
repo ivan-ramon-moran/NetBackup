@@ -8,7 +8,7 @@ public class ThreadRestaurar extends Thread {
 	}
 	
 	public void run(){
-		//Enviamoss al servidor la orden de que vamos a restaurar los ficheros
+		//Enviamos al servidor la orden de que vamos a restaurar los ficheros
     	clienteMsg.enviarCadena(new String("2"));
     	Integer numTransferencias = (Integer)clienteMsg.recibirObjeto();
     	//Recibimos los datos de las transferencias
