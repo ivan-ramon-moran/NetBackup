@@ -1,3 +1,5 @@
+import javafx.application.Platform;
+
 
 public class ThreadRestaurar extends Thread {
 	
@@ -8,15 +10,29 @@ public class ThreadRestaurar extends Thread {
 	}
 	
 	public void run(){
+		//Abrimos la ventana de progreso de la restauración
+    	final VentanaProgresoRestaurar ventanaProgreso = new VentanaProgresoRestaurar();
 		//Enviamos al servidor la orden de que vamos a restaurar los ficheros
     	clienteMsg.enviarCadena(new String("2"));
-    	Integer numTransferencias = (Integer)clienteMsg.recibirObjeto();
+    	final Integer numTransferencias = (Integer)clienteMsg.recibirObjeto();
     	//Recibimos los datos de las transferencias
     	for (int i = 0; i < numTransferencias; i++){
-    		FicheroSincronizacion fSin = (FicheroSincronizacion)clienteMsg.recibirObjeto();
+    		final FicheroSincronizacion fSin = (FicheroSincronizacion)clienteMsg.recibirObjeto();
+    		final int iTransferenciaActual = i + 1;
+    		Platform.runLater(new Runnable(){
+    			@Override
+				public void run() {
+    				ventanaProgreso.setArchivo(fSin.getNombreFichero());
+    				ventanaProgreso.setNumArchivos(numTransferencias - iTransferenciaActual);
+				}
+    			
+    		});
+    		
     		System.out.println(fSin.getNombreFichero());
-    		clienteMsg.recibirFichero(fSin);
+    		clienteMsg.recibirFichero(fSin, ventanaProgreso);
     	}
+    	
+    	ventanaProgreso.cerrarVentana();
 	}
 	
 }

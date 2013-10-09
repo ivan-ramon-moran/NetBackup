@@ -57,7 +57,7 @@ public class NetBackup extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-    	//------------------------USUARIO DEL SISTEMA-----------------------------
+    	//---------------------------CONFIGURACION--------------------------------
     	//Leemos la configuracion del fichero
     	System.out.println(Configuracion.getInstance().bPrimeraVez);
     	//------------------------------------------------------------------------
@@ -563,7 +563,7 @@ public class NetBackup extends Application {
         
         //----------------------INICIAMOS EL CLIENTE------------------------------
     	iniciarCliente();
-    	//------------------------------------------------------------------------    	
+    	//------------------------------------------------------------------------
     }
     
     void OpcionExplorarServidor(){

@@ -287,3 +287,32 @@
 {
 	-fx-font-size: 13;
 }
+
+#ventana-progreso-restaurar{
+	-fx-border-insets: 23;
+    -fx-background-insets: 23;
+	-fx-background-radius: 6;
+ 	-fx-border-radius: 6;
+	-fx-border-color: #b4b4b4;
+	-fx-border-style: solid;
+	-fx-border-width: 1;
+	-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 24, 0.5, 0, 0);
+	-fx-background-color: linear-gradient(to bottom, white 30%, #eae9e9);
+}
+
+#ventana-progreso-restaurar-cabecera{
+	-fx-background-color: #3e3e3e;
+	-fx-border-radius:  6 6 0 0;
+	-fx-background-radius: 6 6 0 0;
+}
+
+#ventana-progreso-restauracion-titulo{
+	-fx-text-fill: white;
+	-fx-font-weight: bold;
+	-fx-font-size: 13;
+	-fx-padding: 20 20 20 10;
+}
+
+.label-restaurar{
+	-fx-font-size: 13;
+}

@@ -9,8 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -158,27 +157,6 @@ public class Cliente {
 			return false;
 	}
 	
-	/*private int buscarTransferencia(String rutaArchivo)
-	{
-		int indice = -1, i = 0;
-		boolean bEncontrado = false;
-		
-		File file = new File(rutaArchivo);
-		
-		while (!bEncontrado){
-			Transferencia transferencia = (Transferencia)transferencias.get(i);
-			
-			if (file.getName().equals(transferencia.getNombreArchivo())){
-				indice = i;
-				bEncontrado = true;
-			}
-			
-			i++;
-		}
-		
-		return indice;
-	}
-	*/
 	public void cerrarSocket()
 	{
 		if (cliente != null){
@@ -225,43 +203,65 @@ public class Cliente {
 		return reply;
 	}
 	
-	public void recibirFichero(FicheroSincronizacion fSin)
+	public void recibirFichero(FicheroSincronizacion _fSin, final VentanaProgresoRestaurar _ventanaProgreso)
 	{
 		byte [] data = new byte[65536];
 		int numBytes;
 		DataOutputStream dos = null;
 		
 			
-		System.out.println("RECIBIENDO FICHERO");
 		Long fileSize = (long) 0;
-		
 		try {
 			fileSize = (Long)ddis.readObject();
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
+		} catch (ClassNotFoundException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		System.out.println("File Size: " + fileSize);
-		long tamanyoRecibido = 0;
+		long tamanyoTotal = fileSize;
+		double tamanyoRecibido = 0.0;
+		long tamanyoVelocidad = 0;
 		
 		//Creamos la carpeta en el servidor
-		String strRutaFichero = fSin.getRutaFichero();
+		String strRutaFichero = _fSin.getRutaFichero();
 		
 		File file = new File(strRutaFichero.substring(0, strRutaFichero.lastIndexOf("\\")));
 		
 		file.mkdirs();
 		try {
-			dos = new DataOutputStream(new FileOutputStream(fSin.getRutaFichero()));
-			
+			dos = new DataOutputStream(new FileOutputStream(_fSin.getRutaFichero()));
+	    	final DecimalFormat df = new DecimalFormat("#.##");
+	    	
+	    	long lTiempoInicial = System.currentTimeMillis();
 			//Recibimos el fichero
 			while (fileSize > 0 && (numBytes = ddis.read(data, 0, (int)Math.min(data.length, fileSize))) != -1)  
 			{  
-			    dos.write(data, 0, numBytes);  
-			    fileSize -= numBytes;  
+			    dos.write(data, 0, numBytes);
+			    tamanyoRecibido += numBytes;
+			    fileSize -= numBytes;
+			    tamanyoVelocidad += numBytes;
+			    //Comprobamos si ha pasado un segundo
+			    if (System.currentTimeMillis() - lTiempoInicial >= 1000){
+			    	lTiempoInicial = System.currentTimeMillis();
+			    	_ventanaProgreso.setVelocidad(tamanyoVelocidad / 1024 / 1024);
+			    	tamanyoVelocidad = 0;
+			    }
+			    
+			    final double fTamanyoRecibido = tamanyoRecibido;
+			    final long fTamanyoTotal = tamanyoTotal;
+			    
+			    Platform.runLater(new Runnable(){
+					@Override
+					public void run() {
+						 //Limitamos el numero de veces que se actualiza la barra de progeso para disminuir la carga
+					    if (Double.valueOf(fTamanyoRecibido / fTamanyoTotal) - _ventanaProgreso.getProgreso() > 0.01){
+					    	String strProgreso = df.format(fTamanyoRecibido / fTamanyoTotal);
+					    	strProgreso = strProgreso.replace(",", ".");
+					    	_ventanaProgreso.setProgreso(Double.parseDouble(strProgreso));
+						}						
+					}
+			    	
+			    });
+			   
 			}  
 			
 			dos.close();
@@ -273,6 +273,8 @@ public class Cliente {
 			e.printStackTrace();
 		}
 		
+		//Ponemos la barra de progreso a completado
+		_ventanaProgreso.setProgreso(1.0);
 		System.out.println("Recibido");
 	}
 
