@@ -1,4 +1,3 @@
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -58,6 +57,10 @@ public class NetBackup extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+    	//------------------------USUARIO DEL SISTEMA-----------------------------
+    	//Leemos la configuracion del fichero
+    	System.out.println(Configuracion.getInstance().bPrimeraVez);
+    	//------------------------------------------------------------------------
     	//-----------------SE INICIA LA VENTANA DE LOGGING------------------------
     	logging = new Ventana();
     	//------------------------USUARIO DEL SISTEMA-----------------------------
