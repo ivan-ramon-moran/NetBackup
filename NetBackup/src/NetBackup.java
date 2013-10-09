@@ -493,6 +493,16 @@ public class NetBackup extends Application {
         labelInfoRestaurar.setWrapText(true);
         HBox contBotonRestaurar = new HBox(100);
         Button botonRestaurar = new Button("Restaurar");
+        
+        botonRestaurar.setOnAction(new EventHandler<ActionEvent>(){
+        	@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+        		restaurar();
+			}
+        	
+        });
+        
         Label labelUltimaCopia = new Label("Última copia: 23/10/2013 18:55");
         contBotonRestaurar.getChildren().addAll(labelUltimaCopia, botonRestaurar);
         HBox.setHgrow(contBotonRestaurar, Priority.ALWAYS);
@@ -549,7 +559,7 @@ public class NetBackup extends Application {
         primaryStage.show();
         
         //----------------------INICIAMOS EL CLIENTE------------------------------
-    	IniciarCliente();
+    	iniciarCliente();
     	//------------------------------------------------------------------------    	
     }
     
@@ -574,7 +584,7 @@ public class NetBackup extends Application {
     	generarConfiguracionGeneral();	
     }
     
-    void IniciarCliente()
+    void iniciarCliente()
     {
     	cliente = new Cliente(colaTransferencias, transferencias);
     	clienteMsg = new Cliente(colaTransferencias, transferencias);
@@ -588,8 +598,8 @@ public class NetBackup extends Application {
     	//Este thread solo la primera vez!
     	//ThreadCDSensibles tDatos = new ThreadCDSensibles("C:\\Users\\" + usuarioSistema.getUsuario(), colaTransferencias, transferencias);
     	//tDatos.start();
-    	ThreadSincronizacion tSincro = new ThreadSincronizacion("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop\\aaa", clienteMsg, lElementoActual, colaTransferencias, transferencias);
-    	tSincro.start();
+    	//ThreadSincronizacion tSincro = new ThreadSincronizacion("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop", clienteMsg, lElementoActual, colaTransferencias, transferencias);
+    	//tSincro.start();
     }
     
     void generarConfiguracionGeneral(){ 
@@ -671,6 +681,17 @@ public class NetBackup extends Application {
     	cuerpoConfiguracion.getChildren().addAll(contDirectoriosSincro, labelExSincro, dirSincro);
     }
     
+    private void restaurar(){
+    	//Enviamos al servidor la orden de que vamos a restaurar los ficheros
+    	clienteMsg.enviarCadena(new String("2"));
+    	Integer numTransferencias = (Integer)clienteMsg.recibirObjeto();
+    	//Recibimos los datos de las transferencias
+    	for (int i = 0; i < numTransferencias; i++){
+    		FicheroSincronizacion fSin = (FicheroSincronizacion)clienteMsg.recibirObjeto();
+    		System.out.println(fSin.getNombreFichero());
+    	}
+    	
+    }
     
 }
 

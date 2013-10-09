@@ -196,6 +196,19 @@ public class Cliente {
 		}
 	}
 	
+	public Object recibirObjeto(){
+		Object obj = null;
+		
+		try {
+			obj =  ddis.readObject();
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return obj;
+	}
+	
 	public boolean recibirBoolean() throws IOException{
 		boolean reply = true;
 		try {
