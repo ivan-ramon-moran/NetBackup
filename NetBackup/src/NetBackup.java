@@ -598,7 +598,7 @@ public class NetBackup extends Application {
     	//Este thread solo la primera vez!
     	//ThreadCDSensibles tDatos = new ThreadCDSensibles("C:\\Users\\" + usuarioSistema.getUsuario(), colaTransferencias, transferencias);
     	//tDatos.start();
-    	//ThreadSincronizacion tSincro = new ThreadSincronizacion("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop", clienteMsg, lElementoActual, colaTransferencias, transferencias);
+    	//ThreadSincronizacion tSincro = new ThreadSincronizacion("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop\\aaa", clienteMsg, lElementoActual, colaTransferencias, transferencias);
     	//tSincro.start();
     }
     
@@ -682,15 +682,9 @@ public class NetBackup extends Application {
     }
     
     private void restaurar(){
-    	//Enviamos al servidor la orden de que vamos a restaurar los ficheros
-    	clienteMsg.enviarCadena(new String("2"));
-    	Integer numTransferencias = (Integer)clienteMsg.recibirObjeto();
-    	//Recibimos los datos de las transferencias
-    	for (int i = 0; i < numTransferencias; i++){
-    		FicheroSincronizacion fSin = (FicheroSincronizacion)clienteMsg.recibirObjeto();
-    		System.out.println(fSin.getNombreFichero());
-    	}
-    	
+    	//Creamos e iniciamos el thread para restaurar archivos para que no se quede bloqueada la aplicación
+    	ThreadRestaurar tRestaurar = new ThreadRestaurar(clienteMsg);
+    	tRestaurar.start();
     }
     
 }

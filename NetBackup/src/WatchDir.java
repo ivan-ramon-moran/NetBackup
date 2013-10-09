@@ -141,7 +141,7 @@ public class WatchDir {
             }
 
             for (WatchEvent<?> event: key.pollEvents()) {
-                WatchEvent.Kind kind = event.kind();
+                WatchEvent.Kind<?> kind = event.kind();
 
                 // TBD - provide example of how OVERFLOW event is handled
                 if (kind == OVERFLOW) {
@@ -163,7 +163,6 @@ public class WatchDir {
 		                if (file.length() != 0 && !file.isDirectory()){		                	
 		                	//AQUI se produce una modificación en el sistema de archivos
 	                		//System.out.println(child.toString());
-	                		DecimalFormat df = new DecimalFormat("#.##");
 	                		Platform.runLater(new Runnable() {
 	                			  @Override
 	                			  public void run() {

@@ -1,12 +1,16 @@
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -221,4 +225,55 @@ public class Cliente {
 		return reply;
 	}
 	
+	public void recibirFichero(FicheroSincronizacion fSin)
+	{
+		byte [] data = new byte[65536];
+		int numBytes;
+		DataOutputStream dos = null;
+		
+			
+		System.out.println("RECIBIENDO FICHERO");
+		Long fileSize = (long) 0;
+		
+		try {
+			fileSize = (Long)ddis.readObject();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		System.out.println("File Size: " + fileSize);
+		long tamanyoRecibido = 0;
+		
+		//Creamos la carpeta en el servidor
+		String strRutaFichero = fSin.getRutaFichero();
+		
+		File file = new File(strRutaFichero.substring(0, strRutaFichero.lastIndexOf("\\")));
+		
+		file.mkdirs();
+		try {
+			dos = new DataOutputStream(new FileOutputStream(fSin.getRutaFichero()));
+			
+			//Recibimos el fichero
+			while (fileSize > 0 && (numBytes = ddis.read(data, 0, (int)Math.min(data.length, fileSize))) != -1)  
+			{  
+			    dos.write(data, 0, numBytes);  
+			    fileSize -= numBytes;  
+			}  
+			
+			dos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Recibido");
+	}
+
 }
