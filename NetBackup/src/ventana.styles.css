@@ -2,6 +2,7 @@
 {
     -fx-background-color: #f3f3f9;
     -fx-font-smoothing-type: lcd;
+    
 }
 
 #ventana-principal{
@@ -12,8 +13,8 @@
 	-fx-border-color: rgba(255, 255, 255, 1);
 	-fx-border-style: solid;
 	-fx-border-width: 1;
-	-fx-effect: dropshadow(three-pass-box, rgba(229, 229, 229, 0.5), 24, 0.5, 0, 0);
-	-fx-background-color: #f3f3f3;
+	-fx-effect: dropshadow(three-pass-box, rgba(229, 229, 229, 0.8), 24, 0.5, 0, 0);
+	-fx-background-color: linear-gradient(to bottom, white 30%, #eae9e9);
 }
 #cTitulo {
     -fx-background-color: #3e3e3e;
@@ -35,39 +36,36 @@
 }
 
 #aceptar{
-	-fx-background-color:
-        #FF0000,
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
-        linear-gradient(#20262b, #191d22),
-        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
-    -fx-font-weight: bold 120%;
-    -fx-font-family: "Bradley Hand ITC";
-    -fx-text-fill: linear-gradient(white, #FFFAF0);
-    -fx-font-size: 15px 
+	-fx-background-color: #3e3e3e;
+	-fx-background-insets: 0;
+	-fx-background-radius: 5;
+	-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,1.0) , 5, 0.5 , 1.0 , 1 );
+	-fx-border-radius: 5;
+	-fx-text-fill: white;
+	-fx-font-size: 13;
+	-fx-cursor:hand;
 }
+
 
 #cancelar{
-	-fx-background-color:
-        #FF0000,
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
-        linear-gradient(#20262b, #191d22),
-        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
-	-fx-font-weight: bold 120%;
-	-fx-font-family: "Bradley Hand ITC";
-    -fx-text-fill: linear-gradient(white, #d0d0d0);
-    -fx-font-size: 15px 
-    
+	-fx-background-color: #3e3e3e;
+	-fx-background-insets: 0;
+	-fx-background-radius: 5;
+	-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,1.0) , 5, 0.5 , 1.0 , 1 );
+	-fx-border-radius: 5;
+	-fx-text-fill: white;
+	-fx-font-size: 13;
+	-fx-cursor:hand;
 }
 
+
 #Nuevo-Usuario{
-	-fx-background-color:
-        #FF0000,
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
-        linear-gradient(#20262b, #191d22),
-        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
-	-fx-font-weight: bold 120%;
-	-fx-font-family: "Bradley Hand ITC";
-    -fx-text-fill: linear-gradient(white, #d0d0d0);
-    -fx-font-size: 15px 
-	
+	-fx-background-color: #3e3e3e;
+	-fx-background-insets: 0;
+	-fx-background-radius: 5;
+	-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,1.0) , 5, 0.5 , 1.0 , 1 );
+	-fx-border-radius: 5;
+	-fx-text-fill: white;
+	-fx-font-size: 13;
+	-fx-cursor:hand;
 }

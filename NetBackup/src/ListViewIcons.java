@@ -5,28 +5,47 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 
-public class ListViewIcons extends VBox{
+public class ListViewIcons extends ScrollPane{
 	
 	private ArrayList<String> listaArchivos = new ArrayList<String>();
 	private FlowPane flow = null;
 	private static ArrayList<HBox> arrayContenedores = new ArrayList<HBox>();
 	
 	public ListViewIcons(){
-		this.setMaxSize(600, 500);
-		this.setPrefSize(600, 500);
-		flow = new FlowPane();
-		flow.setHgap(10);
-		flow.setVgap(5);
+		VBox contenedorPrincipal = new VBox();
+		//HBox.setHgrow(contenedorPrincipal, Priority.ALWAYS);
+		contenedorPrincipal.setId("exploracion-remota");
+		this.setStyle("-fx-background-color: transparent");
+		this.setMinHeight(500);
+		this.setPrefHeight(500);
+		
+		DropShadow ds = new DropShadow();
+        ds.setOffsetY(3.0);
+        ds.setOffsetX(3.0);
+        ds.setColor(Color.GRAY);
+        this.setEffect(ds);
+		Label label = new Label("POOO");
+		contenedorPrincipal.getChildren().add(label);
+		this.setContent(contenedorPrincipal);
+		this.setFitToHeight(true);
+		this.setFitToWidth(true);
+		//flow = new FlowPane();
+		//flow.setHgap(10);
+		//flow.setVgap(5);
 	    
-	    this.getChildren().add(flow);
+	    //this.getChildren().add(flow);
 	}
 	
 	public void setItems(ArrayList<String> inListaArchivos)

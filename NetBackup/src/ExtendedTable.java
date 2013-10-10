@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
@@ -43,7 +44,8 @@ public class ExtendedTable extends ScrollPane{
         ds.setOffsetX(3.0);
         ds.setColor(Color.GRAY);
         this.setEffect(ds);
-		this.setPrefHeight(2000);
+        this.setMinHeight(500);
+		this.setPrefHeight(500);
 		this.setId("extended-table-scroller");
 		this.setContent(contenedorPrincipal);
 		this.setFitToHeight(true);
@@ -119,10 +121,17 @@ public class ExtendedTable extends ScrollPane{
 		contBarra.getChildren().add(barra);
 		fila.getChildren().add(contBarra);
 		HBox contTamanyo = new HBox();
+		contTamanyo.setPrefWidth(100);
 		Label labelTamanyo = new Label(transferencia.getTamanyoArchivo());
 		labelTamanyo.getStyleClass().add("extended-table-celda");
 		contTamanyo.getChildren().add(labelTamanyo);
 		fila.getChildren().add(contTamanyo);
+		//Miniatura
+		ImageView ivMiniatura = new ImageView(obtenerImagen(transferencia.getNombreArchivo()));
+		HBox contMiniatura = new HBox();
+		contMiniatura.setPrefWidth(100);
+		contMiniatura.getChildren().add(ivMiniatura);
+		fila.getChildren().add(contMiniatura);
 		this.contenedorPrincipal.getChildren().add(fila);
 		HBox separador = new HBox();
 		separador.setId("transferencias-separador");
@@ -206,7 +215,15 @@ public class ExtendedTable extends ScrollPane{
 		Label labelTamanyo = new Label("Sin establecer");
 		labelTamanyo.getStyleClass().add("extended-table-celda");
 		contTamanyo.getChildren().add(labelTamanyo);
+		contTamanyo.setPrefWidth(100);
 		fila.getChildren().add(contTamanyo);
+		//Miniatura
+		ImageView ivMiniatura = new ImageView(new Image("images/folder.png"));
+		HBox contMiniatura = new HBox();
+		contMiniatura.setPrefWidth(100);
+		contMiniatura.getChildren().add(ivMiniatura);
+		fila.getChildren().add(contMiniatura);
+		
 		this.contenedorPrincipal.getChildren().add(fila);
 		HBox separador = new HBox();
 		separador.setId("transferencias-separador");
@@ -216,6 +233,25 @@ public class ExtendedTable extends ScrollPane{
 		ExtendedTableDirectorio dir = new ExtendedTableDirectorio(transferencias, iNumeroItems, this.contenedorPrincipal, this.alBarras, this.alEstado, this.alFilas);
 		directorios.add(dir);
 		iNumeroItems++;
+	}
+	
+	public static  Image obtenerImagen(String strNombreArchivo){
+		Image image = null;
+		
+		if (strNombreArchivo.contains(".jpg") || strNombreArchivo.contains(".png"))
+			image = new Image("images/image-png.png");
+		else if (strNombreArchivo.contains(".pdf"))
+			image = new Image("images/application-pdf.png");
+		else if (strNombreArchivo.contains(".mp3"))
+			image = new Image("images/mp3.png");
+		else if (strNombreArchivo.contains(".zip"))
+			image = new Image("images/application-x-zip.png");
+		else if (strNombreArchivo.contains(".rar"))
+			image = new Image("images/application-x-rar.png");
+		else
+			image = new Image("images/application-x-executable.png");
+
+		return image;
 	}
 	
 	public ProgressBar getProgressBar(int indice){

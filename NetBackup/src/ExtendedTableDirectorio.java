@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -76,7 +78,14 @@ public class ExtendedTableDirectorio {
 				Label labelTamanyo = new Label(transferencia.getTamanyoArchivo());
 				labelTamanyo.getStyleClass().add("extended-table-celda");
 				contTamanyo.getChildren().add(labelTamanyo);
-				filaActual.getChildren().addAll(contNombre, contEstado, contBarra, contTamanyo);
+				contTamanyo.setPrefWidth(100);
+				//Miniatura
+				ImageView ivMiniatura = new ImageView(ExtendedTable.obtenerImagen(transferencia.getNombreArchivo()));
+				HBox contMiniatura = new HBox();
+				contMiniatura.setPrefWidth(100);
+				contMiniatura.getChildren().add(ivMiniatura);
+				
+				filaActual.getChildren().addAll(contNombre, contEstado, contBarra, contTamanyo, contMiniatura);
 				separadores.get(i).setPrefHeight(1);
 			}
 		}

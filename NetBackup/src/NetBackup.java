@@ -48,7 +48,7 @@ public class NetBackup extends Application {
 	private ArrayList<Object> aLabelOpciones = new ArrayList<Object>();
 	private VBox cuerpoConfiguracion;
 	private UsuarioSistema usuarioSistema = null;
-	private Ventana logging = null;
+	private VentanaLogin logging = null;
 	private Label lElementoActual = null;
 	
 	public static void main(String[] args) {
@@ -62,7 +62,7 @@ public class NetBackup extends Application {
     	System.out.println(Configuracion.getInstance().bPrimeraVez);
     	//------------------------------------------------------------------------
     	//-----------------SE INICIA LA VENTANA DE LOGGING------------------------
-    	logging = new Ventana();
+    	logging = new VentanaLogin();
     	//------------------------USUARIO DEL SISTEMA-----------------------------
     	usuarioSistema = new UsuarioSistema();
     	//------------------------------------------------------------------------
@@ -229,13 +229,15 @@ public class NetBackup extends Application {
         transferencias.addColumn("NOMBRE", 400);
         transferencias.addColumn("ESTADO", 100);
         transferencias.addColumn("PROGRESO", 150);
-        transferencias.addColumn("TAMAÑO", 0);
+        transferencias.addColumn("TAMAÑO", 100);
+        transferencias.addColumn("TIPO", 0);
         
         panelTransferencias.getChildren().add(transferencias);
         //-------------------------------------------------------------------------
         //-------------------PANEL CONFIGURACION-----------------------------------
         panelConfiguracion = new VBox();
         HBox contMenuCuerpo = new HBox(10);
+        //HBox.setHgrow(contMenuCuerpo, Priority.ALWAYS);
         contMenuCuerpo.setStyle("-fx-padding: 10 10 10 10");
         VBox menuConfiguracion = new VBox();
         DropShadow dropMenuConfig = new DropShadow();
@@ -248,23 +250,21 @@ public class NetBackup extends Application {
         cuerpoConfiguracion = new VBox(10);
         DropShadow dropCuerpoConfig = new DropShadow();
         dropCuerpoConfig.setRadius(5.0);
-        dropCuerpoConfig.setOffsetX(0.0);
+        dropCuerpoConfig.setOffsetX(3.0);
         dropCuerpoConfig.setOffsetY(3.0);
         dropCuerpoConfig.setColor(Color.color(0.4, 0.5, 0.5));
         cuerpoConfiguracion.setEffect(dropShadow);
-        HBox.setHgrow(cuerpoConfiguracion, Priority.ALWAYS);
         ScrollPane scrollConfiguracion = new ScrollPane();
         scrollConfiguracion.setStyle("-fx-background-color: transparent; -fx-border-radius: 6; -fx-background-radius: 6");
         scrollConfiguracion.setContent(cuerpoConfiguracion);
-        scrollConfiguracion.setPrefWidth(1000);
+        //scrollConfiguracion.setFitToHeight(true);
+        scrollConfiguracion.setFitToWidth(true);
+        scrollConfiguracion.setPrefWidth(800);
         scrollConfiguracion.setHbarPolicy(ScrollBarPolicy.NEVER);
-        //scrollConfiguracion.setFitToHeight(true);   
-        scrollConfiguracion.setFitToWidth(true);        
-
+        
+        
         contMenuCuerpo.getChildren().addAll(menuConfiguracion, scrollConfiguracion);
         menuConfiguracion.setMinSize(200, 500);
-        VBox.setVgrow(panelConfiguracion, Priority.ALWAYS);
-        VBox.setVgrow(menuConfiguracion, Priority.ALWAYS);
         
         final HBox contLabelGeneral = new HBox();
         final Label labelCGeneral = new Label("GENERAL");
@@ -521,7 +521,6 @@ public class NetBackup extends Application {
         
         
         ListViewIcons list = new ListViewIcons();
-    	list.setId("lista");
         ArrayList aa = new ArrayList();
         aa.add("item1");
         aa.add("item2");
@@ -536,7 +535,7 @@ public class NetBackup extends Application {
         aa.add("item11");
         aa.add("item12");
         
-    	list.setItems(aa);
+    	//list.setItems(aa);
     	panelExploracion.getChildren().add(list);
     	panelExploracion.setId("panelExploracion");
         

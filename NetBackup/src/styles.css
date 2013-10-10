@@ -76,18 +76,18 @@
 .table-row-cell {
     -fx-background-color: #f3f3f3;
 }
-#lista
+
+#exploracion-remota
 {
-	-fx-padding: 10 10 10 10;
-	-fx-background-color: white;
+	-fx-background-color:  linear-gradient(to bottom, white 30%, #eae9e9);
 	-fx-background-radius: 5px;
 	-fx-border-color: #CCC;
-	-fx-border-radius: 5px;
+	-fx-border-radius: 5px;	
 }
 
 .contenedorItem
 {
-	-fx-background-color: white;
+	-fx-background-color: transparent;
 	-fx-padding: 5 5 5 5;
 }
 
@@ -314,5 +314,34 @@
 }
 
 .label-restaurar{
+	-fx-font-size: 13;
+}
+
+#ventana-mensaje{
+	-fx-border-insets: 23;
+    -fx-background-insets: 23;
+	-fx-background-radius: 6;
+ 	-fx-border-radius: 6;
+	-fx-border-color: #b4b4b4;
+	-fx-border-style: solid;
+	-fx-border-width: 1;
+	-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 24, 0.5, 0, 0);
+	-fx-background-color: linear-gradient(to bottom, white 30%, #eae9e9);
+}
+
+#ventana-mensaje-cabecera{
+	-fx-background-color: #3e3e3e;
+	-fx-border-radius:  6 6 0 0;
+	-fx-background-radius: 6 6 0 0;
+		
+}
+
+#ventana-mensaje-aceptar{
+	-fx-background-color: #3e3e3e;
+	-fx-background-insets: 0;
+	-fx-background-radius: 5;
+	-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,1.0) , 5, 0.5 , 1.0 , 1 );
+	-fx-border-radius: 5;
+	-fx-text-fill: white;
 	-fx-font-size: 13;
 }
