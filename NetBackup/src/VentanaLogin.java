@@ -1,26 +1,21 @@
 
-import javafx.application.Application;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 //LA CLASE VENTANAPIDE USUARIO Y CONTRASEÑA AL USUARIO
 
@@ -45,18 +40,19 @@ public class VentanaLogin {
 		HBox cTitulo = new HBox (25);
 		cTitulo.setId("cTitulo");
 		
-		HBox barra = new HBox();
-		barra.setPrefHeight(20);
-		barra.setId("barra");
-		
 		//ETIQUETAS Y COMENTARIOS EN LA VENTANA
 		Label titulo = new Label ("NetBackup - Pantalla de Login");
-		//titulo.setFont(Font.loadFont("file:resources/fonts/adrip1.ttf", 120));
         titulo.setStyle("-fx-font-size: 13;");
         titulo.setId("ventana-titulo");
+        HBox contCuerpo = new HBox(20);
+        VBox contCampos = new VBox(15);
+        ImageView ivLogin = new ImageView(new Image("images/login.png"));
+        ivLogin.setFitHeight(96);
+        ivLogin.setFitWidth(96);
+        contCuerpo.getChildren().addAll(ivLogin, contCampos);
         
         HBox contUsuario = new HBox(15);
-        contUsuario.setStyle("-fx-padding: 20 20 0 20");
+        contUsuario.setStyle("-fx-padding:0");
 		contUsuario.setAlignment(Pos.CENTER);
         usuario.setStyle("-fx-background-radius: 10px");
         usuario.setPrefWidth(200);
@@ -75,10 +71,7 @@ public class VentanaLogin {
 		etiquetaPass.setStyle("-fx-font-size: 14");
 
 		contPass.getChildren().addAll(etiquetaPass, password);
-		
-		Label etiquetaBarra = new Label("NetBackup v0.1- Automatic backup for your files!!!");
-		etiquetaBarra.setFont(new Font("Bradley Hand ITC", 15));
-		etiquetaBarra.setStyle("-fx-text-fill:white;");
+		contCampos.getChildren().addAll(contUsuario, contPass);
 		
 		try {
 			//DECLARACIÓN DE LOS BOTONES
@@ -99,14 +92,12 @@ public class VentanaLogin {
 			
 			cTitulo.getChildren().add(titulo);
 			
-			contenedorPrincipal.getChildren().add(contUsuario);			
-			
-			
-			contenedorPrincipal.getChildren().add(contPass);
-			
-			
+			contenedorPrincipal.getChildren().add(contCuerpo);			
+						
+			CheckBox checkInicioAutomatico = new CheckBox("Inicio de sesion automático.");
+			contCampos.getChildren().add(checkInicioAutomatico);
 			contenedorPrincipal.getChildren().add(contenedorSecundario);
-			
+			contenedorSecundario.setAlignment(Pos.CENTER_RIGHT);
 			contenedorSecundario.getChildren().add(aceptar);
 			
 			contenedorSecundario.getChildren().add(cancelar);
@@ -121,7 +112,7 @@ public class VentanaLogin {
 			HBox.setHgrow(cTitulo, Priority.ALWAYS);
 			
 			
-			Scene scene = new Scene(root,425,275);
+			Scene scene = new Scene(root,475,275);
 			scene.setFill(Color.TRANSPARENT);
 			scene.getStylesheets().add("ventana.styles.css");
 			
