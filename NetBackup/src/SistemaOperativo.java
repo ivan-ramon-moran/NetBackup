@@ -31,7 +31,7 @@ public class SistemaOperativo {
 					buscarDatosSensibles(ruta + "/" + file2.getName());
 				}
 				else{
-					ficheros.add(new FicheroSincronizacion(file2.getAbsolutePath(), file2.getName()));
+					ficheros.add(new FicheroSincronizacion(file2.getAbsolutePath(), file2.getName(), file2.length()));
 				}
 			}
 		}

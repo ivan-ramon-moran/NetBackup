@@ -5,10 +5,12 @@ public class FicheroSincronizacion implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String strRutaFichero;
 	private String strNombreFichero;
+	private long fileSize;
 	
-	public FicheroSincronizacion(String _strRutaFichero, String _strNombreFichero){
+	public FicheroSincronizacion(String _strRutaFichero, String _strNombreFichero, long _fileSize){
 		this.strNombreFichero = _strNombreFichero;
 		this.strRutaFichero = _strRutaFichero;
+		this.fileSize = _fileSize;
 	}
 	
 	public void setRutaFichero(String _strRutaFichero){
@@ -25,6 +27,10 @@ public class FicheroSincronizacion implements Serializable {
 	
 	public String getNombreFichero(){
 		return this.strNombreFichero;
+	}
+	
+	public long getFileSize(){
+		return this.fileSize;
 	}
 	
 }

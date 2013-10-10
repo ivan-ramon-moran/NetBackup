@@ -59,6 +59,7 @@ public class VentanaLogin {
 		
 		//ETIQUETAS Y COMENTARIOS EN LA VENTANA
 		Label titulo = new Label ("NetBackup - Pantalla de Login");
+		
         titulo.setStyle("-fx-font-size: 13;");
         titulo.setId("ventana-titulo");
         HBox contCuerpo = new HBox(20);

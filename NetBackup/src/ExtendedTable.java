@@ -248,9 +248,10 @@ public class ExtendedTable extends ScrollPane{
 			image = new Image("images/application-x-zip.png");
 		else if (strNombreArchivo.contains(".rar"))
 			image = new Image("images/application-x-rar.png");
+		else if (strNombreArchivo.contains(".doc") || strNombreArchivo.contains(".docx"))
+			image = new Image("images/x-office-document.png");
 		else
 			image = new Image("images/application-x-executable.png");
-
 		return image;
 	}
 	

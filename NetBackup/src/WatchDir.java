@@ -233,7 +233,7 @@ public class WatchDir {
         System.exit(-1);
     }
     
-    public String obtenerTamanyo(Long fileSize){
+    public static String obtenerTamanyo(Long fileSize){
     	String strTamanyo = "";
     	DecimalFormat df = new DecimalFormat("#.##");
     	double dFileSize = fileSize;
@@ -241,11 +241,11 @@ public class WatchDir {
     	if (fileSize <= KILOBYTE){
     		strTamanyo = fileSize + " Bytes";
     	}else if (fileSize > KILOBYTE && fileSize <=  MEGABYTE){
-    		strTamanyo = df.format((dFileSize / KILOBYTE)) + "KBytes";
+    		strTamanyo = df.format((dFileSize / KILOBYTE)) + " KBytes";
     	}else if (fileSize > MEGABYTE && fileSize <= GIGABYTE){
-    		strTamanyo = df.format((dFileSize / MEGABYTE)) + "MBytes";
+    		strTamanyo = df.format((dFileSize / MEGABYTE)) + " MBytes";
     	}else{
-    		strTamanyo = df.format((dFileSize / GIGABYTE)) + "GBytes";
+    		strTamanyo = df.format((dFileSize / GIGABYTE)) + " GBytes";
     	}
     	
     	return strTamanyo;

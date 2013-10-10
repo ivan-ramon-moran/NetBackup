@@ -57,12 +57,12 @@ public class ThreadSincronizacion extends Thread {
 					 a la lista de transferencias.*/
 					
 					if (!bExiste){
-						colaTransferencias.encolar(new Transferencia(fSin.getRutaFichero(), fSin.getNombreFichero(),"0", "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+						colaTransferencias.encolar(new Transferencia(fSin.getRutaFichero(), fSin.getNombreFichero(), WatchDir.obtenerTamanyo(fSin.getFileSize()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
 	                	Platform.runLater(new Runnable(){
 	                		@Override
 							public void run() {
 								// TODO Auto-generated method stub
-	    						transferencias.addItem(new Transferencia(fSin.getRutaFichero(), fSin.getNombreFichero(), "0", "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+	    						transferencias.addItem(new Transferencia(fSin.getRutaFichero(), fSin.getNombreFichero(), WatchDir.obtenerTamanyo(fSin.getFileSize()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
 							}
 	                		
 	                	});
