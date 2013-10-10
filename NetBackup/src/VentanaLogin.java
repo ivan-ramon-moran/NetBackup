@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -27,6 +28,7 @@ public class VentanaLogin {
 	private String usser = null;
 	private String pass = null;
 	private Stage primaryStage = null;
+	private double xOffset, yOffset;
 	
 	public VentanaLogin () {
 		primaryStage = new Stage(StageStyle.TRANSPARENT);
@@ -38,6 +40,21 @@ public class VentanaLogin {
 		contenedorSecundario.setId("ventana");
 		
 		HBox cTitulo = new HBox (25);
+		//ESTO HACE QUE SE MUEVA LA VENTANA
+		cTitulo.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            }
+        });
+		cTitulo.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+            	primaryStage.setX(event.getScreenX() - xOffset);
+            	primaryStage.setY(event.getScreenY() - yOffset);
+            }
+        });
 		cTitulo.setId("cTitulo");
 		
 		//ETIQUETAS Y COMENTARIOS EN LA VENTANA

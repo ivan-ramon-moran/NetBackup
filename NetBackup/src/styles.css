@@ -344,4 +344,5 @@
 	-fx-border-radius: 5;
 	-fx-text-fill: white;
 	-fx-font-size: 13;
+	-fx-cursor: hand;
 }

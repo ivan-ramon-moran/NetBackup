@@ -50,6 +50,7 @@ public class NetBackup extends Application {
 	private UsuarioSistema usuarioSistema = null;
 	private VentanaLogin logging = null;
 	private Label lElementoActual = null;
+	private double xOffset, yOffset;
 	
 	public static void main(String[] args) {
         launch(args);
@@ -91,9 +92,25 @@ public class NetBackup extends Application {
         root.getStyleClass().add("root");
         Scene scene = new Scene(root, 1060, 730);
         scene.setFill(Color.TRANSPARENT);
-        scene.getStylesheets().add("styles.css");
-        
+        scene.getStylesheets().add("styles.css");        
+       
         HBox cabecera = new HBox();
+        //ESTO HACE QUE SE MUEVA LA VENTANA
+        cabecera.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            }
+        });
+        cabecera.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+            	ptrStage.setX(event.getScreenX() - xOffset);
+            	ptrStage.setY(event.getScreenY() - yOffset);
+            }
+        });
+        
         HBox cTitulo = new HBox();
         HBox cBotonCerrar = new HBox();
         cabecera.setPrefHeight(100);
