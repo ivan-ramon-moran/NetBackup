@@ -2,12 +2,14 @@ import java.io.File;
 import java.text.DecimalFormat;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -20,17 +22,20 @@ public class ItemDE extends VBox{
 	private int iNumeroItem;
 	
 	public ItemDE(String rutaFichero, String nombreFichero, int anchura, int altura, int iNumeroItem){
+		this.setSpacing(10);
 		this.rutaFichero = rutaFichero;
 		this.nombreFichero = nombreFichero;
 		this.bSeleccionado = false;
 		this.iNumeroItem = iNumeroItem;
-		this.setPrefSize(112, 90);
-		
+		this.setMinSize(112, 90);
+		this.setMaxWidth(112);
 		//Creamos los componentes graficos del objeto
 		HBox contenedorImage = new HBox();
 		contenedorImage.setAlignment(Pos.CENTER);
 		HBox contenedorNombre = new HBox();
 		contenedorNombre.setPrefWidth(112);
+		contenedorNombre.setMaxWidth(112);
+
 		ImageView iv = new ImageView(obtenerImagen());
 		iv.setFitHeight(altura);
 		iv.setFitWidth(anchura);
@@ -41,11 +46,15 @@ public class ItemDE extends VBox{
 			iv.setPreserveRatio(true);
 		
 		DropShadow dropShadow = new DropShadow();
-        dropShadow.setOffsetX(10);
-        dropShadow.setOffsetY(10);
+        dropShadow.setOffsetX(5);
+        dropShadow.setOffsetY(5);
         dropShadow.setColor(Color.rgb(50, 50, 50, 0.7));
         iv.setEffect(dropShadow);
+        iv.setSmooth(true);
 		Text tNombre = new Text();
+		tNombre.setTextAlignment(TextAlignment.CENTER);
+		tNombre.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+		tNombre.setWrappingWidth(100);
 		
 		if (nombreFichero.length() > 30){
 			tNombre.setText(nombreFichero.substring(0, 30) + "...");
@@ -53,11 +62,10 @@ public class ItemDE extends VBox{
 			tNombre.setText(nombreFichero);
 		
 		
-		tNombre.setTextAlignment(TextAlignment.CENTER);
-		tNombre.setWrappingWidth(100);
 		contenedorImage.getChildren().add(iv);
 		contenedorImage.setStyle("-fx-padding: 5 0 0 0");
 		contenedorNombre.getChildren().add(tNombre);
+		contenedorNombre.setAlignment(Pos.CENTER);
 		
 		this.getChildren().addAll(contenedorImage, contenedorNombre);
 	}
@@ -74,7 +82,9 @@ public class ItemDE extends VBox{
 		this.bSeleccionado = bSeleccionado;
 		
 		if (bSeleccionado)
-			this.setStyle("-fx-background-color: rgba(120,170,252, 0.5); -fx-border-color: #498cfc ;-fx-background-radius: 5; -fx-border-radius: 5;");
+			this.setStyle("-fx-background-color: #F0F0F0; -fx-border-color: #D3D3D3 ;-fx-background-radius: 5; -fx-border-radius: 5;");
+		else
+			this.setStyle("-fx-background-color: transparent; -fx-border-color: transparent");
 	}
 	
 	public String getNombreFichero(){
@@ -127,15 +137,20 @@ public class ItemDE extends VBox{
 		Image image = null;
 		
 		if (nombreFichero.contains(".txt"))
-			image = new Image("images/TXTcopia.png");
+			image = new Image("images/application-text.png");
 		else if (nombreFichero.contains(".docx"))
-			image = new Image("images/word.png");
+			image = new Image("images/application-msword.png");
 		else if (nombreFichero.contains(".pdf"))
-			image = new Image("images/pdf.png");
+			image = new Image("images/application-pdf.png");
 		else if (nombreFichero.contains(".mp3"))
 			image = new Image("images/audio-x-generic.png");
 		else if (nombreFichero.contains(".jpg"))
 			image = new Image("file:" + getRutaFichero());
+		else if (nombreFichero.contains(".png"))
+			image = new Image("images/image.png");
+		else
+			image = new Image("images/image.png");
+
 		
 		return image;
 	}

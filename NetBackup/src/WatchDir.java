@@ -157,12 +157,11 @@ public class WatchDir {
                 System.out.format("%s: %s\n", event.kind().name(), child);
                 
                 if (event.kind().name().equals("ENTRY_CREATE")){
-                	if (!child.toString().contains("~")){
-	                	final File file = new File(child.toString());
-		                
+                	final File file = new File(child.toString());
+                	
+                	if (file.getName().charAt(0) != '.'){		                
 		                if (file.length() != 0 && !file.isDirectory()){		                	
 		                	//AQUI se produce una modificación en el sistema de archivos
-	                		//System.out.println(child.toString());
 	                		Platform.runLater(new Runnable() {
 	                			  @Override
 	                			  public void run() {
@@ -170,7 +169,7 @@ public class WatchDir {
 	                			  }
 	                			});
 	                		colaTransferencias.encolar(new Transferencia(child.toString(), file.getName(),obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
-  	                		ContadorItems.incrementarNumero();
+	                		ContadorItems.incrementarNumero();
 		                }
 		                
 		                //Si se ha creado un nuevo directorio
@@ -179,7 +178,7 @@ public class WatchDir {
 		                	final ArrayList<Transferencia> aFicheros = new ArrayList<Transferencia>();
 		                	
 		                	for (int i = 0; i < ficheros.length; i++){
-			                	final File file2 = new File(file.getAbsolutePath() + "\\" + ficheros[i]);
+			                	final File file2 = new File(file.getAbsolutePath() + "/" + ficheros[i]);
 			                		
 		                		if (!file2.isDirectory() && file2.length() != 0){
 		                			aFicheros.add(new Transferencia(file2.getAbsolutePath(), file2.getName(), obtenerTamanyo(file2.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));			                			 

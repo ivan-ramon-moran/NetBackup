@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -53,16 +54,18 @@ public class VentanaMensaje {
 				
 				contCabecera.setPrefHeight(40);
 				contCabecera.setId("ventana-mensaje-cabecera");
-				Label labelTitulo = new Label("Error de conexión");
-				labelTitulo.setStyle("-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10"); 
+				Label labelTitulo = new Label("Error de conexiÃ³n");
+				labelTitulo.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 13));
+
+				labelTitulo.setStyle("-fx-text-fill: white; -fx-padding: 10"); 
 				contCabecera.getChildren().add(labelTitulo);
 				HBox contCuerpo = new HBox(20);
 				ImageView ivTipoMensaje = new ImageView(new Image("images/alert.png"));
 				ivTipoMensaje.setFitHeight(96);
 				ivTipoMensaje.setFitWidth(96);
 				Label labelMensaje = new Label(_strMensaje);
+				labelMensaje.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
 				labelMensaje.setWrapText(true);
-				labelMensaje.setStyle("-fx-font-size: 14");
 				contCuerpo.setAlignment(Pos.CENTER);
 				contCuerpo.setStyle("-fx-padding: 15 15 0 15");
 				Button botonAceptar = new Button("Aceptar");

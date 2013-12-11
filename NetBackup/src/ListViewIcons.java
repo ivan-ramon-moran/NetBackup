@@ -1,20 +1,30 @@
 import java.util.ArrayList;
+import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 
 public class ListViewIcons extends ScrollPane{
@@ -22,11 +32,67 @@ public class ListViewIcons extends ScrollPane{
 	private ArrayList<String> listaArchivos = new ArrayList<String>();
 	private FlowPane flow = null;
 	private static ArrayList<HBox> arrayContenedores = new ArrayList<HBox>();
+	private VBox contenedorPrincipal;
+	private VBox contenedorItems;
+	private ItemDE [] items;
+	private final ContextMenu cm = new ContextMenu();
+	private NetBackup vista;
 	
-	public ListViewIcons(){
-		VBox contenedorPrincipal = new VBox();
+	public ListViewIcons(NetBackup _vista){
+		this.vista = _vista;
+		
+		contenedorPrincipal = new VBox();
+		contenedorItems = new VBox();
+		contenedorItems.setStyle("-fx-padding: 5 5 5 5");
+		VBox.setVgrow(contenedorItems, Priority.ALWAYS);
+		HBox cabeceraExplorador = new HBox();
+		DropShadow dropShadow = new DropShadow();
+        dropShadow.setOffsetX(0);
+        dropShadow.setOffsetY(0);
+        dropShadow.setColor(Color.rgb(0, 0, 0, 0.7));
+        dropShadow.setRadius(6);
+        cabeceraExplorador.setEffect(dropShadow);
+		cabeceraExplorador.setMinHeight(30);
+		Label labelTitulo = new Label("EXPLORACIÓN EN EL SERVIDOR");
+		labelTitulo.setStyle("-fx-padding: 7; -fx-text-fill: white");
+		labelTitulo.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+		cabeceraExplorador.getChildren().add(labelTitulo);
+		HBox contBusqueda = new HBox(5);
+		HBox.setHgrow(contBusqueda, Priority.ALWAYS);
+		contBusqueda.setAlignment(Pos.CENTER_RIGHT);
+		contBusqueda.setStyle("-fx-padding: 3 10 3 3");
+		Label labelBusqueda = new Label("Buscar:");
+		labelBusqueda.setStyle("-fx-text-fill: white");
+		labelBusqueda.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+		TextField tBusqueda = new TextField();
+		tBusqueda.setPrefHeight(20);
+		tBusqueda.setStyle("-fx-background-radius: 10");
+		tBusqueda.setAlignment(Pos.CENTER);
+		List<String> listaFiltros = new ArrayList<String>();
+		listaFiltros.add("Todos");
+		listaFiltros.add("Documentos");
+		listaFiltros.add("Imágenes");
+		listaFiltros.add("Audio");
+		ComboBox comboFiltro = new ComboBox();
+		comboFiltro.setPrefHeight(20);
+		comboFiltro.setItems(FXCollections.observableList(listaFiltros));
+		comboFiltro.setValue("Todos");
+		contBusqueda.getChildren().addAll(comboFiltro, labelBusqueda, tBusqueda);
+		cabeceraExplorador.getChildren().add(contBusqueda);
+		contenedorPrincipal.getChildren().add(cabeceraExplorador);
+		cabeceraExplorador.setId("cabecera-explorador");
+		//RUTA
+		HBox contRuta  = new HBox();
+		Label labelRuta = new Label("Ruta: ");
 		//HBox.setHgrow(contenedorPrincipal, Priority.ALWAYS);
 		contenedorPrincipal.setId("exploracion-remota");
+		HBox pie = new HBox();
+		pie.setPrefHeight(30);
+		pie.setId("pie-explorador");
+		Label labelNumArchivos = new Label("TOTAL: X ARCHIVOS");
+		labelNumArchivos.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+		pie.getChildren().add(labelNumArchivos);
+		labelNumArchivos.setStyle("-fx-text-fill: white; -fx-padding: 7");
 		this.setStyle("-fx-background-color: transparent");
 		this.setMinHeight(500);
 		this.setPrefHeight(500);
@@ -35,64 +101,76 @@ public class ListViewIcons extends ScrollPane{
         ds.setOffsetY(3.0);
         ds.setOffsetX(3.0);
         ds.setColor(Color.GRAY);
+        ds.setRadius(6);
+        contenedorPrincipal.getChildren().add(contenedorItems);
+        contenedorPrincipal.getChildren().add(pie);
+
         this.setEffect(ds);
-		Label label = new Label("POOO");
-		contenedorPrincipal.getChildren().add(label);
+		
 		this.setContent(contenedorPrincipal);
 		this.setFitToHeight(true);
 		this.setFitToWidth(true);
-		//flow = new FlowPane();
-		//flow.setHgap(10);
-		//flow.setVgap(5);
-	    
-	    //this.getChildren().add(flow);
+		
+		cm.setStyle("-fx-background-color: #5A5A5A ;-fx-border-radius: 5; -fx-background-radius: 5; -fx-border-width: 1");
+		//Creamos los menus items
+		MenuItem cmItemTransferir = new MenuItem("Descargar");
+		cmItemTransferir.setStyle("-fx-text-fill: white");
+		MenuItem cmItemInformacion = new MenuItem("Información");
+		cmItemInformacion.setStyle("-fx-text-fill: white");
+		MenuItem cmItemBorrar = new MenuItem("Borrar");		
+		cmItemBorrar.setStyle("-fx-text-fill: white");
+
+		cm.getItems().addAll(cmItemTransferir, cmItemInformacion, cmItemBorrar);
 	}
 	
-	public void setItems(ArrayList<String> inListaArchivos)
-	{
-		listaArchivos.clear();
-		arrayContenedores.clear();
-		this.listaArchivos = inListaArchivos;
+	
+	public void setItems(ItemDE [] _items){
+		HBox fila = null;
+		this.items = _items;
+		contenedorItems.getChildren().clear();
 		
-		for (int i = 0; i < listaArchivos.size(); i++)
-		{
-			HBox contenedorItem = new HBox();
-			arrayContenedores.add(contenedorItem);
-			contenedorItem.setOnMouseClicked(new EventHandler<MouseEvent>(){
-				 @Override
-		          public void handle(MouseEvent me) {
-					 System.out.println(arrayContenedores.size());
-					 
-					 for (int i = 0; i < arrayContenedores.size(); i++){
-						 arrayContenedores.get(i).getStyleClass().clear();
-						 arrayContenedores.get(i).getStyleClass().add("contenedorItem");
-					 }
-					 
-					 HBox contenedorItem = (HBox)me.getSource();
-		             contenedorItem.getStyleClass().add("itemSeleccionado");
-		          }
-		 
-		      });
+		for (int i = 0; i < items.length; i++){
+			final ItemDE fItem = items[i]; 
 			
-			contenedorItem.setAlignment(Pos.CENTER);
-			contenedorItem.setMaxWidth(100);
-			contenedorItem.setMinWidth(100);
-
-			contenedorItem.getStyleClass().add("contenedorItem");
-			Label labelItem = new Label(listaArchivos.get(i) + "KKKKKKKKKKKKKKKKK" , new ImageView(new Image("images/close.png")));
-			labelItem.setWrapText(true);
-			labelItem.setOnMouseClicked(new EventHandler<MouseEvent>(){
-				 @Override
-		          public void handle(MouseEvent me) {
-		              Labeled labeled = (Labeled)me.getSource();
-		        	  System.out.println("Seleccionado: " + labeled.getText());
-		          }
-		 
-		      });
-			labelItem.setContentDisplay(ContentDisplay.TOP);
-			contenedorItem.getChildren().add(labelItem);
-			flow.getChildren().add(contenedorItem);
+			items[i].setOnMouseClicked(new EventHandler<MouseEvent>(){
+				@Override
+				public void handle(MouseEvent event) {
+					if (event.getClickCount() == 2){
+						ItemDE item = null;
+						
+						for (int i = 0; i < items.length; i++)
+							items[i].setSeleccionado(false);
+						
+						if (event.getTarget() instanceof ItemDE){
+							 item = (ItemDE)event.getTarget();
+						}
+						else{
+							Node node = (Node)event.getTarget();
+				
+							while (!(node instanceof ItemDE))
+								node = node.getParent();
+							
+							item = ((ItemDE) node);
+						}
+						item.setSeleccionado(true);
+						vista.descargarFichero(item);
+					}
+					
+					if (event.getButton() == MouseButton.SECONDARY){
+						cm.show(fItem, event.getScreenX(), event.getScreenY());
+					}
+				}
+				
+			});
+						
+			
+			if (i % 8 == 0){
+				fila = new HBox(5);
+				contenedorItems.getChildren().add(fila);
+				fila.getChildren().add(items[i]);
+			}else{
+				fila.getChildren().add(items[i]);
+			}
 		}
-		
 	}
 }

@@ -132,7 +132,7 @@ public class VentanaDatosEncontrados{
 			     contTitulo.setId("ventana-datos-encontrados-cabecera");
 			     HBox.setHgrow(contTitulo, Priority.ALWAYS);
 			     Label labelTitulo = new Label("ARCHIVOS ENCONTRADOS EN EL DISCO DURO");
-			     labelTitulo.setFont(Font.font(java.awt.Font.SANS_SERIF, FontWeight.SEMI_BOLD, 20));
+			     labelTitulo.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 20));
 			     contTitulo.getChildren().add(labelTitulo);
 			     labelTitulo.setId("ventana-datos-encontrados-titulo");
 			     contenedorPrincipal.getChildren().add(contCabecera);
@@ -155,7 +155,9 @@ public class VentanaDatosEncontrados{
 			     contenedorMenu.setPrefWidth(200);
 			     contenedorMenu.setId("ventana-datos-encontrados-menu");
 			     final HBox cLabelFotos = new HBox();
-			     final Label labelFotos = new Label("IM¡GENES/FOTOS" + " (" + ptrFotosEncontradas.size() + ")");
+			     final Label labelFotos = new Label("IM√ÅGENES/FOTOS" + " (" + ptrFotosEncontradas.size() + ")");
+			     labelFotos.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
 			     cOpciones[0] = cLabelFotos;
 			     cLabelOpciones[0] = labelFotos;
 			     cLabelFotos.setOnMouseClicked(new EventHandler<MouseEvent>(){
@@ -182,7 +184,9 @@ public class VentanaDatosEncontrados{
 			     cLabelFotos.setPrefSize(200, 30);
 			     cLabelFotos.setAlignment(Pos.CENTER);
 			     cLabelFotos.getChildren().add(labelFotos);
-			     final Label labelMusica = new Label("AUDIO/M⁄SICA" +  " (" + ptrAudiosEncontrados.size() + ")");
+			     final Label labelMusica = new Label("AUDIO/M√öSICA" +  " (" + ptrAudiosEncontrados.size() + ")");
+			     labelMusica.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
 			     final HBox cLabelMusica = new HBox();
 			     cOpciones[1] = cLabelMusica;
 			     cLabelOpciones[1] = labelMusica;
@@ -213,6 +217,8 @@ public class VentanaDatosEncontrados{
 			     cLabelMusica.getChildren().add(labelMusica);
 			     final HBox cLabelDocumentos = new HBox();
 			     final Label labelDocumentos = new Label("DOCUMENTOS" + " ("  + ptrDocuEncontrados.size() + ")");
+			     labelDocumentos.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
 			     cOpciones[2] = cLabelDocumentos;
 			     cLabelOpciones[2] = labelDocumentos;
 			     cLabelDocumentos.setAlignment(Pos.CENTER);
@@ -243,6 +249,8 @@ public class VentanaDatosEncontrados{
 			     
 			     final HBox cLabelVideos = new HBox();
 			     final Label labelVideos = new Label("VIDEOS");
+			     labelVideos.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
 			     cOpciones[3] = cLabelVideos;
 			     cLabelOpciones[3] = labelVideos;
 			     cLabelVideos.setAlignment(Pos.CENTER);

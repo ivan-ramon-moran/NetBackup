@@ -13,7 +13,7 @@ public class ThreadRestaurar extends Thread {
 	
 	public void run(){
 		if (clienteMsg.isConnected()){
-			//Abrimos la ventana de progreso de la restauración
+			//Abrimos la ventana de progreso de la restauraciï¿½n
 	    	final VentanaProgresoRestaurar ventanaProgreso = new VentanaProgresoRestaurar();
 			//Enviamos al servidor la orden de que vamos a restaurar los ficheros
 	    	clienteMsg.enviarCadena(new String("2"));
@@ -37,7 +37,7 @@ public class ThreadRestaurar extends Thread {
 	    	
 	    	ventanaProgreso.cerrarVentana();
 		}else{
-			VentanaMensaje ventanaMsg = new VentanaMensaje(1, "No se puede utilizar la función de restaurar porque no esta conectado al servidor. Verifique que NetBackup Server esta funcionando y vuelva a intentarlo.");
+			VentanaMensaje ventanaMsg = new VentanaMensaje(1, "No se puede utilizar la funciÃ³n de restaurar porque no esta conectado al servidor. Verifique que NetBackup Server esta funcionando y vuelva a intentarlo.");
 		}
 		
 	}

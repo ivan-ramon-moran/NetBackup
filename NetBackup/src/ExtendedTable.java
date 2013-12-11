@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class ExtendedTable extends ScrollPane{
 	
@@ -34,11 +35,17 @@ public class ExtendedTable extends ScrollPane{
 		contenedorColumnas.setPrefHeight(30);
 		contenedorColumnas.setMinHeight(30);
 		contenedorColumnas.setId("extended-table-header");
+		DropShadow dropShadow = new DropShadow();
+        dropShadow.setOffsetX(0);
+        dropShadow.setOffsetY(0);
+        dropShadow.setColor(Color.rgb(0, 0, 0, 0.7));
+        contenedorColumnas.setEffect(dropShadow);
 		contenedorPrincipal.getChildren().add(contenedorColumnas);
-		HBox separador = new HBox();
+		/*HBox separador = new HBox();
 		separador.setId("transferencias-separador");
 		separador.setPrefHeight(1);
 		contenedorPrincipal.getChildren().add(separador);
+		*/
 		DropShadow ds = new DropShadow();
         ds.setOffsetY(3.0);
         ds.setOffsetX(3.0);
@@ -62,15 +69,14 @@ public class ExtendedTable extends ScrollPane{
 		}
 		
 		cont.setId("extended-table-cont-label-column");
-		cont.setPadding(new Insets(6,0,0,5));
+		cont.setPadding(new Insets(8,0,0,5));
 		Label label = new Label(tituloColumna);
+		label.setStyle("-fx-text-fill: white");
+		label.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
 		label.setId("extended-table-label-column");
 		cont.getChildren().add(label);
 		this.contenedorColumnas.getChildren().add(cont);
-		/*HBox separador = new HBox();
-		separador.getStyleClass().add("separador-columna");
-		separador.setPrefWidth(1);
-		this.contenedorColumnas.getChildren().add(separador);*/
 	}
 	
 	public void addItem(Transferencia transferencia){
@@ -78,21 +84,23 @@ public class ExtendedTable extends ScrollPane{
 		fila.setPrefHeight(27);
 		fila.setMinHeight(27);
 
-		if (iNumeroItems % 2 == 0)
+		/*if (iNumeroItems % 2 == 0)
 			fila.getStyleClass().add("extended-table-fila-par");
 		else
 			fila.getStyleClass().add("extended-table-fila-impar");
+		 */
+		fila.getStyleClass().add("extended-table-fila");
 
-			
+		
 		alFilas.add(fila);
 		fila.setOnMouseClicked(new EventHandler<MouseEvent>(){
 			@Override
 	        public void handle(MouseEvent me) {
 				for (int i = 0; i < alFilas.size(); i++){
-					alFilas.get(i).setStyle("-fx-background-color: transparent");
+					alFilas.get(i).setStyle("-fx-background-color: #F2F2F2");
 				}
 				
-				fila.setStyle("-fx-background-color: rgb(48,109,202);");
+				fila.setStyle("-fx-background-color: white");
 			}
 		});
 		
@@ -100,11 +108,15 @@ public class ExtendedTable extends ScrollPane{
 		contNombre.setPrefWidth(400);
 		Label labelNombre = new Label(transferencia.getNombreArchivo());
 		labelNombre.getStyleClass().add("extended-table-celda");
+		labelNombre.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
 		contNombre.getChildren().add(labelNombre);
 		fila.getChildren().add(contNombre);
 		HBox contEstado = new HBox();
 		contEstado.setPrefWidth(100);
 		Label labelEstado = new Label(transferencia.getEstadoTransferencia());
+		labelEstado.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
 		alEstado.add(labelEstado);
 		labelEstado.getStyleClass().add("extended-table-celda");
 		contEstado.getChildren().add(labelEstado);
@@ -124,6 +136,8 @@ public class ExtendedTable extends ScrollPane{
 		contTamanyo.setPrefWidth(100);
 		Label labelTamanyo = new Label(transferencia.getTamanyoArchivo());
 		labelTamanyo.getStyleClass().add("extended-table-celda");
+		labelTamanyo.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
 		contTamanyo.getChildren().add(labelTamanyo);
 		fila.getChildren().add(contTamanyo);
 		//Miniatura

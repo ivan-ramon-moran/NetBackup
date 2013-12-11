@@ -24,10 +24,12 @@ public class Cliente {
 	private Cola colaTransferencias = null;
 	private ExtendedTable transferencias = null;
 	private Label labelEstado = null;
+	private NetBackup vista;
 	
-	Cliente(Cola colaTransferencias, ExtendedTable transferencias){
+	Cliente(Cola colaTransferencias, ExtendedTable transferencias, NetBackup _vista){
 		this.colaTransferencias = colaTransferencias;
 		this.transferencias = transferencias;
+		this.vista = _vista;
 	}
 	
 	public int conectar(String direccion, int puerto){
@@ -36,6 +38,7 @@ public class Cliente {
 			cliente = new Socket(direccion, puerto);
 			
 			if (cliente.isConnected()){
+				vista.setConectado();
 				dos = new ObjectOutputStream(cliente.getOutputStream());
 				ddis = new ObjectInputStream(cliente.getInputStream());
 				String nombreUsuario = "k3rnel";
@@ -52,6 +55,15 @@ public class Cliente {
 				if (iResultado != 1){
 					cliente.close();
 					System.out.println("Nombre de usuario o contraseña incorrectos");
+				}else
+				{
+					vista.setUsuario(nombreUsuario);
+					Long lTamanyoLibre = (Long)ddis.readObject();
+					vista.setEspacioLibre(lTamanyoLibre);
+					Integer iNumUsuarios = (Integer)ddis.readObject();
+					vista.setUsuarioConectados(iNumUsuarios);
+					String sDirectorio = (String)ddis.readObject();
+					vista.setDirectorioPersonal(sDirectorio);
 				}
 			}
 		
@@ -59,6 +71,9 @@ public class Cliente {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -87,7 +102,7 @@ public class Cliente {
 		ProgressBar barra = (ProgressBar)transferencias.getProgressBar(transferencia.getIdTransferencia());
 		HBox fila = transferencias.getFila(transferencia.getIdTransferencia());
 		
-		fila.setStyle("-fx-background-color: #3ffd6b");
+		fila.setStyle("-fx-background-color: linear-gradient(to bottom, #99FF99, #00C500)");
 		
 		Platform.runLater(new Runnable() {
 			  @Override
@@ -109,6 +124,8 @@ public class Cliente {
 			{	
 				//Enviamos el bloque.
 				dos.write(data, 0, numBytes);
+				dos.flush();
+				System.out.println("ENVIADO");
 				bytesEnviados += numBytes;
 				
 				if (Double.valueOf(bytesEnviados / tamanyoFichero) - barra.getProgress() > 0.01){
@@ -118,19 +135,13 @@ public class Cliente {
 			
 			dis.close();
 			
+			fila.setStyle("-fx-background-color: #7BFF56");
 			Platform.runLater(new Runnable() {
 				  @Override
 				  public void run() {
 					  labelEstado.setText("Completado");
 				  }
 			});
-		
-			if (transferencia.getIdTransferencia() % 2 == 0){
-				fila.setStyle("extended-table-fila-par");
-			}
-			else{
-				fila.setStyle("extended-table-fila-impar");
-			}	
 			
 			try {
 				Thread.sleep(100);
@@ -276,6 +287,39 @@ public class Cliente {
 		//Ponemos la barra de progreso a completado
 		_ventanaProgreso.setProgreso(1.0);
 		System.out.println("Recibido");
+	}
+	
+	public void recibirFichero(){
+		byte [] data = new byte[65536];
+		int numBytes;
+		DataOutputStream ddos = null;
+		
+		try {
+			Long fileSize = (long) 0;
+			try {
+				fileSize = (Long)ddis.readObject();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			long tamanyoRecibido = 0;
+			
+			//Creamos la carpeta en el servidor
+			File file = new File("/home/k3rnel/" + "aaa.png");
+			ddos = new DataOutputStream(new FileOutputStream(file));
+			
+			while (fileSize > 0 && ((numBytes = ddis.read(data, 0, (int)Math.min(data.length, fileSize))) > 0))  
+			{  
+				ddos.write(data, 0, numBytes); 
+				//ddos.flush();
+				fileSize -= numBytes;  
+			} 
+			
+			ddos.close();
+			System.out.println("Recibido");
+		}catch (Exception e){
+			
+		}
 	}
 
 }

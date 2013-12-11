@@ -1,16 +1,21 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -28,7 +33,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -51,6 +60,9 @@ public class NetBackup extends Application {
 	private VentanaLogin logging = null;
 	private Label lElementoActual = null;
 	private double xOffset, yOffset;
+	private Label labelEstado, labelUsuario, labelEspacio, labelUsuarios;
+	Text labelRutaServidor;
+	ListViewIcons list;
 	
 	public static void main(String[] args) {
         launch(args);
@@ -117,7 +129,7 @@ public class NetBackup extends Application {
         cabecera.setId("ventana-principal-cabecera");
         HBox.setHgrow(cTitulo, Priority.ALWAYS);
         Label labelTitulo = new Label("NetBackup");
-        labelTitulo.setFont(Font.loadFont("file:resources/fonts/adrip1.ttf", 120));
+        labelTitulo.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/adrip1.ttf"), 20));
         labelTitulo.setStyle("-fx-font-size: 70;");
         
         ImageView iv = new ImageView(new Image("images/close.png"));
@@ -161,6 +173,7 @@ public class NetBackup extends Application {
         barraEstado.setPrefHeight(30);
         barraEstado.setId("barra-estado");
         Label labelNombre = new Label("NetBackup v0.1- Automatic backup for your files!!!");
+        labelNombre.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
         labelNombre.setStyle("-fx-text-fill: white; -fx-padding: 5 5 5 10");
         barraEstado.getChildren().add(labelNombre);
         HBox contBarraProgreso = new HBox(5);
@@ -169,8 +182,10 @@ public class NetBackup extends Application {
         HBox.setHgrow(contBarraProgreso, Priority.ALWAYS);
         barraEstado.getChildren().add(contBarraProgreso);
         Label labelEtiTareaActual = new Label("Tarea actual: ");
+        labelEtiTareaActual.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
         labelEtiTareaActual.setStyle("-fx-text-fill: white;");
         Label labelTareaActual = new Label("Ninguna");
+        labelTareaActual.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
         labelTareaActual.setStyle("-fx-text-fill: white;");
         ProgressBar barraTareaActual = new ProgressBar();
         barraTareaActual.setPrefHeight(15);
@@ -186,7 +201,9 @@ public class NetBackup extends Application {
         //------------------------BOTONES TOOLBAR---------------------------------
         //Boton Inicio
         //Boton explorar
-        Button botonInicio = new Button("INICIO");        
+        Button botonInicio = new Button("INICIO");   
+        botonInicio.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 13));
+
         botonInicio.getStyleClass().add("boton_toolbar");
         botonInicio.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
@@ -197,6 +214,8 @@ public class NetBackup extends Application {
         
         //Boton explorar
         Button botonExplorar = new Button("EXPLORAR ARCHIVOS EN EL SERVIDOR");
+        botonExplorar.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 13));
+
         botonExplorar.getStyleClass().add("boton_toolbar");
         botonExplorar.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
@@ -207,6 +226,8 @@ public class NetBackup extends Application {
         
         //Boton transferencias
         Button botonTransferencias = new Button("TRANSFERENCIAS");
+        botonTransferencias.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 13));
+
         botonTransferencias.getStyleClass().add("boton_toolbar");
         botonTransferencias.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
@@ -215,7 +236,9 @@ public class NetBackup extends Application {
             }
         });
         //Boton configuracion
-        Button botonConfiguracion = new Button("CONFIGURACIÓN");
+        Button botonConfiguracion = new Button("CONFIGURACIÃ“N");
+        botonConfiguracion.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 13));
+
         botonConfiguracion.getStyleClass().add("boton_toolbar");
         botonConfiguracion.setOnAction(new EventHandler<ActionEvent>() {
         	@Override
@@ -225,9 +248,31 @@ public class NetBackup extends Application {
         });
         //Boton ayuda
         Button botonAyuda = new Button("AYUDA");
+        botonAyuda.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 13));
         botonAyuda.getStyleClass().add("boton_toolbar");
+        //Alertas de usuario
+        HBox contAlertas = new HBox(5);
+        contAlertas.setStyle("-fx-padding: 0 20 0 0");
+        contAlertas.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(contAlertas, Priority.ALWAYS);
+        ImageView ivAlertaError = new ImageView(new Image("images/alert_error.png"));
+        ivAlertaError.setFitHeight(26);
+        ivAlertaError.setFitWidth(26);
+        ImageView ivAlertaInfo = new ImageView(new Image("images/alert_info.png"));
+        ivAlertaInfo.setFitHeight(23);
+        ivAlertaInfo.setFitWidth(23);
+        Label labelMensajesInfo = new Label("0 Mensajes");
+        labelMensajesInfo.setStyle("-fx-text-fill: white");
+        labelMensajesInfo.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+        Label labelMensajesError = new Label("0 Errores");
+        labelMensajesError.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+        labelMensajesError.setStyle("-fx-text-fill: white");
+
+        contAlertas.getChildren().addAll(ivAlertaInfo, labelMensajesInfo, ivAlertaError, labelMensajesError);
         
-        contenedorOpciones.getChildren().addAll(botonInicio, botonExplorar, botonTransferencias, botonConfiguracion, botonAyuda);
+        contenedorOpciones.getChildren().addAll(botonInicio, botonExplorar, botonTransferencias, botonConfiguracion, botonAyuda, contAlertas);
+        
+        
         //------------------------------------------------------------------------
         contenedorPrincipal.getChildren().add(cabecera);
         contenedorPrincipal.getChildren().add(contenedorOpciones);
@@ -246,7 +291,7 @@ public class NetBackup extends Application {
         transferencias.addColumn("NOMBRE", 400);
         transferencias.addColumn("ESTADO", 100);
         transferencias.addColumn("PROGRESO", 150);
-        transferencias.addColumn("TAMAÑO", 100);
+        transferencias.addColumn("TAMAÃ‘O", 100);
         transferencias.addColumn("TIPO", 0);
         
         panelTransferencias.getChildren().add(transferencias);
@@ -359,7 +404,7 @@ public class NetBackup extends Application {
         contLabelUsuarios.getChildren().add(labelCUsuarios);
         
         final HBox contLabelModulos = new HBox();
-        final Label labelCModulos = new Label("MÓDULOS");
+        final Label labelCModulos = new Label("MÃ“DULOS");
         aOpciones.add(contLabelModulos);
         aLabelOpciones.add(labelCModulos);
 
@@ -396,8 +441,8 @@ public class NetBackup extends Application {
         HBox contConexionMod = new HBox(5);
         VBox contExtConexion = new VBox(10);
         HBox contConexion = new HBox(10);
-        Label labelTituloConexion = new Label("ESTADO DE LA CONEXIÓN");
-        labelTituloConexion.setStyle("-fx-font-weight: bold; -fx-font-size: 14"); 
+        Label labelTituloConexion = new Label("ESTADO DE LA CONEXIÃ“N");
+        labelTituloConexion.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 14));
         contExtConexion.getChildren().add(labelTituloConexion);
         contExtConexion.getChildren().add(contConexion);
         
@@ -411,32 +456,33 @@ public class NetBackup extends Application {
         ivServidor.setFitWidth(128);
         HBox contEstado = new HBox(90);
         Label labelEtiEstado = new Label("Estado: ");
-        labelEtiEstado.getStyleClass().add("label-inicio");
-        Label labelEstado = new Label("Intentando conectarse al servidor");
-        labelEstado.getStyleClass().add("label-inicio");
+        labelEtiEstado.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+        labelEstado = new Label("Intentando conectarse al servidor");
+        labelEstado.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
         HBox contUsuario = new HBox(84);
         Label labelEtiUsuario = new Label("Usuario: ");
-        Label labelUsuario = new Label("Sin especificar...");
-        labelUsuario.getStyleClass().add("label-inicio");
-        labelEtiUsuario.getStyleClass().add("label-inicio");
-        
+        labelEtiUsuario.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+        labelUsuario = new Label("Sin especificar...");
+        labelUsuario.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
         HBox contEspacio = new HBox(54);
         Label labelEtiEspacio = new Label("Espacio libre: ");
-        Label labelEspacio = new Label("Sin especificar...");
-        labelEtiEspacio.getStyleClass().add("label-inicio");
-        labelEspacio.getStyleClass().add("label-inicio");
-        
+        labelEtiEspacio.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+        labelEspacio = new Label("Sin especificar...");
+        labelEspacio.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
         HBox contUsuarios = new HBox(8);
         Label labelEtiUsuarios = new Label("Usuarios conectados:");
-        Label labelUsuarios = new Label("Ningun usuario conectado");
+        labelEtiUsuarios.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+        labelUsuarios = new Label("Ningun usuario conectado");
+        labelUsuarios.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
         labelEtiUsuarios.getStyleClass().add("label-inicio");
         labelUsuarios.getStyleClass().add("label-inicio");
-        
         HBox contRutaServidor = new HBox(6);
         Label labelEtiRutaServidor = new Label("Carpeta en el servidor:");
-        Label labelRutaServidor = new Label("/home/k3rnel/Escritorio/NetBackup");
-        labelEtiRutaServidor.getStyleClass().add("label-inicio");
-        labelRutaServidor.getStyleClass().add("label-inicio");
+        labelEtiRutaServidor.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+        labelRutaServidor = new Text("Sin especificar");
+        labelRutaServidor.setWrappingWidth(200);
+        labelRutaServidor.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+        labelRutaServidor.setSmooth(true);
         
         contUsuario.getChildren().addAll(labelEtiUsuario, labelUsuario);
         contEstado.getChildren().addAll(labelEtiEstado, labelEstado);
@@ -452,36 +498,44 @@ public class NetBackup extends Application {
         
         opcionInicio();
         //----------------------------MODULOS-----------------------------------------------------
-        VBox contExtModulos = new VBox();
+        VBox contExtModulos = new VBox(10);
         contExtModulos.getStyleClass().add("detalles-conexion");
-        Label labelTituloModulos = new Label("MÓDULOS");
+        Label labelTituloModulos = new Label("MÃ“DULOS");
+        labelTituloModulos.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
         labelTituloModulos.setStyle("-fx-font-weight: bold; -fx-font-size: 14"); 
-        HBox contModulos = new HBox();
+        HBox contModulos = new HBox(20);
         contExtModulos.getChildren().add(labelTituloModulos);
         contExtModulos.getChildren().add(contModulos);
         contExtModulos.getStyleClass().add("detalles-conexion");
         HBox.setHgrow(contModulos, Priority.ALWAYS);
-        ImageView ivModulos = new ImageView(new Image("images/puzzle.png"));
+        ImageView ivModulos = new ImageView(new Image("images/codeblocks.png"));
         ivModulos.setFitHeight(128);
         ivModulos.setFitWidth(128);
         contModulos.getChildren().add(ivModulos);
         VBox contDetallesModulos = new VBox();
         HBox contTR = new HBox();
         Label labelEtiModReal = new Label("Copia de seguridad en tiempo real: ");
+        labelEtiModReal.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
         labelEtiModReal.getStyleClass().add("label-inicio");
         ImageView ivReal = new ImageView(new Image("images/ok.png"));
         ivReal.setFitHeight(24);
         ivReal.setFitWidth(24);
         contTR.getChildren().addAll(labelEtiModReal, ivReal);
         HBox contSincro = new HBox();
-        Label labelEtiSincro = new Label("Módulo de sincronización:  ");
+        Label labelEtiSincro = new Label("MÃ³dulo de sincronizaciÃ³n:  ");
+        labelEtiSincro.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
         labelEtiSincro.getStyleClass().add("label-inicio");
         ImageView ivSincro = new ImageView(new Image("images/ok.png"));
         ivSincro.setFitHeight(24);
         ivSincro.setFitWidth(24);
         contSincro.getChildren().addAll(labelEtiSincro, ivSincro);
         HBox contRestaurar = new HBox();
-        Label labelEtiRestaurar = new Label("Módulo de restauración en un 1 click:  ");
+        Label labelEtiRestaurar = new Label("MÃ³dulo de restauraciÃ³n en un 1 click:  ");
+        labelEtiRestaurar.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
         labelEtiRestaurar.getStyleClass().add("label-inicio");
         ImageView ivRestaurar = new ImageView(new Image("images/ok.png"));
         ivRestaurar.setFitHeight(24);
@@ -489,7 +543,9 @@ public class NetBackup extends Application {
         contRestaurar.getChildren().addAll(labelEtiRestaurar, ivRestaurar);
         //Cont versiones
         HBox contVersiones = new HBox(5);
-        Label labelEtiVersiones = new Label("Módulo de versiones: ");
+        Label labelEtiVersiones = new Label("MÃ³dulo de versiones: ");
+        labelEtiVersiones.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
         labelEtiVersiones.getStyleClass().add("label-inicio");
         ImageView ivVersiones = new ImageView(new Image("images/ok.png"));
         ivVersiones.setFitHeight(24);
@@ -502,17 +558,23 @@ public class NetBackup extends Application {
         panelInicio.getChildren().add(contConexionMod);
         //-------------------------------------------------------------------------
         //---------------------------------RESTAURACION CON UN CLIC-------------------------------
+        HBox contFila2 = new HBox();
         VBox contModuloRestaurar = new VBox(10);
+        contFila2.getChildren().add(contModuloRestaurar);
         contModuloRestaurar.setMaxSize(485, 200);
-        contModuloRestaurar.setPrefSize(485, 200);
+        contModuloRestaurar.setPrefSize(485, 170);
         contModuloRestaurar.getStyleClass().add("detalles-conexion");
-        Label labelTituloRestaurar = new Label("RESTAURACIÓN CON UN CLICK");
+        Label labelTituloRestaurar = new Label("RESTAURACIÃ“N CON UN CLICK");
+        labelTituloRestaurar.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 20));
         labelTituloRestaurar.setStyle("-fx-font-weight: bold; -fx-font-size: 14"); 
-        Label labelInfoRestaurar = new Label("La función de restauración le permite restaurar su equipo en caso de perdida de datos masiva. Todos los ficheros se ubicaran donde estaban ubicados antes de la perdida.");
+        Label labelInfoRestaurar = new Label("La funciÃ³n de restauraciÃ³n le permite restaurar su equipo en caso de perdida de datos masiva. Todos los ficheros se ubicaran donde estaban ubicados antes de la perdida.");
+        labelInfoRestaurar.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 20));
         labelInfoRestaurar.getStyleClass().add("label-inicio");
         labelInfoRestaurar.setWrapText(true);
         HBox contBotonRestaurar = new HBox(100);
         Button botonRestaurar = new Button("Restaurar");
+        botonRestaurar.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
         
         botonRestaurar.setOnAction(new EventHandler<ActionEvent>(){
         	@Override
@@ -523,21 +585,67 @@ public class NetBackup extends Application {
         	
         });
         
-        Label labelUltimaCopia = new Label("Última copia: 23/10/2013 18:55");
+        Label labelUltimaCopia = new Label("Ãšltima copia: 23/10/2013 18:55");
+        labelUltimaCopia.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
         contBotonRestaurar.getChildren().addAll(labelUltimaCopia, botonRestaurar);
         HBox.setHgrow(contBotonRestaurar, Priority.ALWAYS);
         Label lEtiElementoActual = new Label("Sincronizando actualmente: ");
+        lEtiElementoActual.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
         lElementoActual = new Label("En reposo...");
         HBox contActual = new HBox();
         contActual.getChildren().addAll(lEtiElementoActual, lElementoActual);
         
         contModuloRestaurar.getChildren().addAll(labelTituloRestaurar,labelInfoRestaurar, contBotonRestaurar, contActual);
+        panelInicio.getChildren().add(contFila2);
+        //----------------------------------------------------------------------------------------
+        //---------------------------------------GRAFICA CARGA------------------------------------
+        VBox contGrafica = new VBox(20);
+        Label labelGrafica = new Label("CARGA DEL SERVIDOR");
+        contGrafica.setStyle("-fx-background-color: light-grey");
+        labelGrafica.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 14));
+        Canvas canvas = new Canvas(500, 150);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
         
-        panelInicio.getChildren().add(contModuloRestaurar);
+        Double [] xPoints = new Double[2];
+        Double [] yPoints = new Double[1];
+        Double [] nPoints = new Double[1];
+
+        
+        xPoints[0] = 0.0;
+        xPoints[1] = 100.0;
+        
+        gc.fillPolygon(new double[]{10, 40, 10, 40},
+                new double[]{210, 210, 240, 240}, 4);        
+        Line l0 = new Line(0, 0, 0, 100);
+        l0.setStroke(Color.GRAY);
+        Line l1 = new Line(1, 0, 500, 0);
+        l1.setStroke(Color.GRAY);
+        Line l2 = new Line(1, 25, 500, 25);
+        l2.setStroke(Color.LIGHTGRAY);
+        Line l3 = new Line(1, 50, 500, 50);
+        l3.setStroke(Color.LIGHTGRAY);
+        Line l4 = new Line(1, 75, 500, 75);
+        l4.setStroke(Color.LIGHTGRAY);
+        Line l5 = new Line(1, 100, 500, 100);
+        l5.setStroke(Color.GRAY);
+        Line l6 = new Line(500, 0, 500, 100);
+        l6.setStroke(Color.GRAY);
+        Line p1 = new Line(1, 100, 60, 60);
+        p1.setStroke(Color.ORANGE);
+        Line p2 = new Line(60, 60, 120, 80);
+        p2.setStroke(Color.ORANGE);
+        p1.setSmooth(true);
+
+        Group g = new Group();
+        
+        g.getChildren().addAll(l0,l1, l2, l3, l4, l5, l6, p1,p2);
+        contGrafica.getChildren().addAll(labelGrafica, g);
+        contGrafica.setPrefSize(500, 150);
+        contFila2.getChildren().add(contGrafica);
+        
         //----------------------------------------------------------------------------------------
         
-        
-        ListViewIcons list = new ListViewIcons();
+        list = new ListViewIcons(this);
         ArrayList aa = new ArrayList();
         aa.add("item1");
         aa.add("item2");
@@ -585,6 +693,18 @@ public class NetBackup extends Application {
     void OpcionExplorarServidor(){
     	paneles.getChildren().clear();
     	paneles.getChildren().add(panelExploracion);
+    	cliente.enviarObjeto("3");
+    	Integer iNumElementos = (Integer) cliente.recibirObjeto();
+    	ItemDE [] items = new ItemDE[iNumElementos];
+    	
+    	for (int i = 0; i < iNumElementos; i++){
+    		String nombreFichero = (String)cliente.recibirObjeto();
+    		ItemDE item = new ItemDE("", nombreFichero, 48, 48, i);
+    		items[i] = item;
+    	}
+		
+    	list.setItems(items);
+
     }
     
     void OpcionTransferencias(){
@@ -605,8 +725,8 @@ public class NetBackup extends Application {
     
     void iniciarCliente()
     {
-    	cliente = new Cliente(colaTransferencias, transferencias);
-    	clienteMsg = new Cliente(colaTransferencias, transferencias);
+    	cliente = new Cliente(colaTransferencias, transferencias, this);
+    	clienteMsg = new Cliente(colaTransferencias, transferencias, this);
     	tConectar = new ThreadConectar(cliente);
     	tConectar.start();
     	tConectarMsg = new ThreadConectar(clienteMsg);
@@ -615,7 +735,7 @@ public class NetBackup extends Application {
     	tEnvio = new ThreadEnvio(cliente, colaTransferencias, transferencias);
     	tEnvio.start();
     	//Este thread solo la primera vez!
-    	//ThreadCDSensibles tDatos = new ThreadCDSensibles("C:\\Users\\" + usuarioSistema.getUsuario(), colaTransferencias, transferencias);
+    	//ThreadCDSensibles tDatos = new ThreadCDSensibles("/home/" + usuarioSistema.getUsuario(), colaTransferencias, transferencias);
     	//tDatos.start();
     	//ThreadSincronizacion tSincro = new ThreadSincronizacion("C:\\Users\\" + usuarioSistema.getUsuario() + "\\Desktop\\aaa", clienteMsg, lElementoActual, colaTransferencias, transferencias);
     	//tSincro.start();
@@ -632,35 +752,35 @@ public class NetBackup extends Application {
     	labelSeccionInicio.setStyle("-fx-text-fill: #716e6e");
     	contOpcionesInicio.getChildren().add(labelSeccionInicio);
     	CheckBox checkInicioSistema = new CheckBox("Iniciar NetBackup con el sistema operativo");
-    	CheckBox checkInicioMinimizada = new CheckBox("Iniciar la aplicación minimizada");
+    	CheckBox checkInicioMinimizada = new CheckBox("Iniciar la aplicaciï¿½n minimizada");
     	//Seccion Politica de alertas
     	HBox contOpcionesAlertas = new HBox();
     	contOpcionesAlertas.setPrefHeight(25);
     	contOpcionesAlertas.getStyleClass().add("apartado-configuracion");
-    	Label labelSeccionAlertas = new Label("POLÍTICA DE ALERTAS");
+    	Label labelSeccionAlertas = new Label("POLÃTICA DE ALERTAS");
     	labelSeccionAlertas.setStyle("-fx-text-fill: #716e6e");
     	CheckBox checkErrorGrave = new CheckBox("Alertarme cuando ocurra un error grave");
     	CheckBox checkAvisoTransferencia = new CheckBox("Avisarme cuando se vaya a copiar un archivo o conjunto de archivos en el servidor");
     	CheckBox checkEliminarArchivos = new CheckBox("Avisarme cuando se borre un archivo del servidor");
-    	CheckBox checkNuevoArchivo = new CheckBox("Avisarme cuando en mi carpeta de sincronización se produzcan cambios");
-    	//Sección idioma
+    	CheckBox checkNuevoArchivo = new CheckBox("Avisarme cuando en mi carpeta de sincronizaciï¿½n se produzcan cambios");
+    	//Secciï¿½n idioma
     	HBox contOpcionesIdioma = new HBox();
     	contOpcionesIdioma.setPrefHeight(25);
     	contOpcionesIdioma.getStyleClass().add("apartado-configuracion");
-    	Label labelSeccionIdioma = new Label("IDIOMA DE LA APLICACIÓN");
+    	Label labelSeccionIdioma = new Label("IDIOMA DE LA APLICACIï¿½N");
     	labelSeccionIdioma.setStyle("-fx-text-fill: #716e6e");
     	HBox contIdioma = new HBox(20);
-    	Label labelSeleccionIdioma = new Label("Seleccione el idioma en el que quiere que se muestre la aplicación");
+    	Label labelSeleccionIdioma = new Label("Seleccione el idioma en el que quiere que se muestre la aplicaciï¿½n");
     	ComboBox<String> cbIdioma = new ComboBox<String>();
     	ObservableList<String> opcionesIdioma = 
     		    FXCollections.observableArrayList(
-    		        "Español",
-    		        "Inglés",
+    		        "Espaï¿½ol",
+    		        "Inglï¿½s",
     		        "Valenciano",
-    		        "Catalán"
+    		        "Catalï¿½n"
     		    );
     	cbIdioma.setItems(opcionesIdioma);
-    	cbIdioma.setValue("Español");
+    	cbIdioma.setValue("Espaï¿½ol");
     	contIdioma.getChildren().addAll(labelSeleccionIdioma, cbIdioma);
     	
     	contOpcionesAlertas.getChildren().add(labelSeccionAlertas);
@@ -679,19 +799,19 @@ public class NetBackup extends Application {
     	Label labelSeccionMonitor = new Label("DIRECTORIOS A MONITOREAR");
     	labelSeccionMonitor.setStyle("-fx-text-fill: #716e6e");
     	contDirectoriosMonitor.getChildren().add(labelSeccionMonitor);
-    	Label labelExMonitor = new Label("Por defecto NetBackup solo monitorea tu carpeta personal, si quieres que se monitoreen más directorios tendrás que añadirlos a la lista. Ten cuidado !!! no tiene sentido añadir directorios que no utilizas, esto podría llenar el servidor de archivos que no utilizarás.");
+    	Label labelExMonitor = new Label("Por defecto NetBackup solo monitorea tu carpeta personal, si quieres que se monitoreen mï¿½s directorios tendrï¿½s que aï¿½adirlos a la lista. Ten cuidado !!! no tiene sentido aï¿½adir directorios que no utilizas, esto podrï¿½a llenar el servidor de archivos que no utilizarï¿½s.");
     	labelExMonitor.setWrapText(true);
     	labelExMonitor.getStyleClass().add("label-configuracion");
     	ListView dirMonitorear = new ListView();
     	dirMonitorear.setPrefHeight(200);
-    	Button botonAnyadirMon = new Button("Añadir directorio");
+    	Button botonAnyadirMon = new Button("Aï¿½adir directorio");
     	//SECCION SINCRO
     	HBox contDirectoriosSincro = new HBox();
     	contDirectoriosSincro.getStyleClass().add("apartado-configuracion");
     	Label labelSeccionSincro = new Label("DIRECTORIOS A SINCRONIZAR");
     	labelSeccionSincro.setStyle("-fx-text-fill: #716e6e");
     	contDirectoriosSincro.getChildren().add(labelSeccionSincro);
-    	Label labelExSincro = new Label("Por defecto NetBackup solo sincroniza un directorio para todas las máquinas de una misma red. Si quieres más directorios sincronizados tendrás que añadirlos.");
+    	Label labelExSincro = new Label("Por defecto NetBackup solo sincroniza un directorio para todas las mï¿½quinas de una misma red. Si quieres mï¿½s directorios sincronizados tendrï¿½s que aï¿½adirlos.");
     	labelExSincro.setWrapText(true);
     	ListView dirSincro = new ListView();
     	dirSincro.setPrefHeight(200);
@@ -701,10 +821,82 @@ public class NetBackup extends Application {
     }
     
     private void restaurar(){
-    	//Creamos e iniciamos el thread para restaurar archivos para que no se quede bloqueada la aplicación
+    	//Creamos e iniciamos el thread para restaurar archivos para que no se quede bloqueada la aplicaciï¿½n
     	ThreadRestaurar tRestaurar = new ThreadRestaurar(clienteMsg);
     	tRestaurar.start();
     }
     
+    public void setConectado(){
+    	Platform.runLater(new Runnable(){
+    		public void run(){
+    	    	labelEstado.setText("Conectado");
+    		}
+    	});
+    }
+    
+    public void setUsuario(String _usuario){
+    	final String usuario = _usuario;
+
+    	Platform.runLater(new Runnable(){
+    		public void run(){
+    	    	labelUsuario.setText(usuario);
+    		}
+    	});
+    }
+    
+    public void setEspacioLibre(Long _lEspacioLibre){
+    	final Long lEspacioLibre = _lEspacioLibre;
+
+    	Platform.runLater(new Runnable(){
+    		public void run(){
+    	    	labelEspacio.setText(obtenerTamanyo(lEspacioLibre));
+    		}
+    	});
+    }
+    
+    public void setUsuarioConectados(Integer _numUsuarios){
+    	final Integer numUsuarios = _numUsuarios;
+
+    	Platform.runLater(new Runnable(){
+    		public void run(){
+    	    	labelUsuarios.setText(numUsuarios + " Usuarios conectados");
+    		}
+    	});
+    }
+    
+    public void setDirectorioPersonal(String _dirPersonal){
+    	final String dirPersonal = _dirPersonal;
+
+    	Platform.runLater(new Runnable(){
+    		public void run(){
+    	    	labelRutaServidor.setText(dirPersonal);
+    		}
+    	});
+    }
+    
+    private String obtenerTamanyo(Long fileSize){
+    	String strTamanyo = "";
+    	DecimalFormat df = new DecimalFormat("#.##");
+    	double dFileSize = fileSize;
+    	
+    	if (fileSize <= WatchDir.KILOBYTE){
+    		strTamanyo = fileSize + " Bytes";
+    	}else if (fileSize > WatchDir.KILOBYTE && fileSize <=  WatchDir.MEGABYTE){
+    		strTamanyo = df.format((dFileSize / WatchDir.KILOBYTE)) + "KBytes";
+    	}else if (fileSize > WatchDir.MEGABYTE && fileSize <= WatchDir.GIGABYTE){
+    		strTamanyo = df.format((dFileSize / WatchDir.MEGABYTE)) + "MBytes";
+    	}else{
+    		strTamanyo = df.format((dFileSize / WatchDir.GIGABYTE)) + "GBytes";
+    	}
+    	
+    	return strTamanyo;
+    }
+    
+    
+    public void descargarFichero(ItemDE item){
+    	cliente.enviarObjeto("4");
+    	cliente.enviarObjeto(item.getNombreFichero());
+    	cliente.recibirFichero();
+    }
 }
 
