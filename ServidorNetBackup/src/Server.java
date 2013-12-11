@@ -1,4 +1,5 @@
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,7 +14,8 @@ public class Server {
 	private ArrayList<ThreadCliente> listaClientes = new ArrayList<ThreadCliente>();
 	private ObjectInputStream dis = null;
 	private ObjectOutputStream dos = null;
-	
+	private static final String path = "/home/k3rnel/Escritorio/NetBackup";
+
 	Server(int puerto)
 	{
 		try {
@@ -45,6 +47,11 @@ public class Server {
 				if (nombreUsuario.equals("k3rnel") && password.equals("admin")){
 					usuario = new Usuario(nombreUsuario, password);
 					dos.writeObject(new Integer(1));
+					File disco = new File("/");
+					Long lEspacioLibre = disco.getFreeSpace();
+					dos.writeObject(lEspacioLibre);
+					dos.writeObject(new Integer(3));
+					dos.writeObject(new String(path + "/" + nombreUsuario));
 				}else
 					dos.writeObject(new Integer(0));
 					

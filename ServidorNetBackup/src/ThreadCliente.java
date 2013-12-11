@@ -17,7 +17,7 @@ public class ThreadCliente extends Thread {
 	private ObjectInputStream dis = null;
 	private ObjectOutputStream ddos = null;
 	private Usuario usuario = null;
-	private static final String path = "C:\\Users\\K3rneL\\Desktop\\NetBackup";
+	private static final String path = "/home/k3rnel/Escritorio/NetBackup";
 	
 	ThreadCliente(Socket cliente, Usuario usuario, ObjectInputStream _dis, ObjectOutputStream _ddos)
 	{
@@ -47,6 +47,10 @@ public class ThreadCliente extends Thread {
 				sincronizar();
 			else if (mensaje.equals("2"))
 				restaurar();
+			else if (mensaje.equals("3"))
+				exploracion();
+			else if (mensaje.equals("4"))
+				enviarFichero();
 			
 			mensaje =  (String)recibirObjeto();
 		}
@@ -80,7 +84,7 @@ public class ThreadCliente extends Thread {
 			
 			System.out.println("Nombre fichero: " + fileName);
 			//Creamos la carpeta en el servidor
-			File file = new File(path  + "\\" + usuario.getNombreUsuario() + "\\" + fileName);
+			File file = new File(path  + "/" + usuario.getNombreUsuario() + "/" + fileName);
 			
 			boolean bExiste = buscarDirectorio(fileName);
 			
@@ -89,10 +93,10 @@ public class ThreadCliente extends Thread {
 			    
 				if (fileName.contains(".")){
 					String extension = fileName.substring(fileName.lastIndexOf("."), fileName.length());
-					dos = new DataOutputStream(new FileOutputStream(path + "\\" + usuario.getNombreUsuario() + "\\" + file.getName() + "\\" + "1" + extension));
+					dos = new DataOutputStream(new FileOutputStream(path + "/" + usuario.getNombreUsuario() + "/" + file.getName() + "/" + "1" + extension));
 				}else{
-					System.out.println(path + usuario.getNombreUsuario() + "\\" + file.getName() + "\\1");
-					dos = new DataOutputStream(new FileOutputStream(path + "\\" + usuario.getNombreUsuario() + "\\" + file.getName() + "\\1"));
+					System.out.println(path + usuario.getNombreUsuario() + "/" + file.getName() + "/1");
+					dos = new DataOutputStream(new FileOutputStream(path + "/" + usuario.getNombreUsuario() + "/" + file.getName() + "/1"));
 				}
 				
 				if (DataBase.ejecutarSentencia("INSERT INTO archivos (id_archivo, nombre) VALUES (1, '" + fileName +"')"))
@@ -114,22 +118,24 @@ public class ThreadCliente extends Thread {
 				
 				if (fileName.contains(".")){
 					String extension = fileName.substring(fileName.lastIndexOf("."), fileName.length());
-					dos = new DataOutputStream(new FileOutputStream(path + "\\" + usuario.getNombreUsuario() + "/" + file.getName() + "/" + (iNumeroFilas + 1) + "." + extension));
+					dos = new DataOutputStream(new FileOutputStream(path + "/" + usuario.getNombreUsuario() + "/" + file.getName() + "/" + (iNumeroFilas + 1) + "." + extension));
 				}else{
-					dos = new DataOutputStream(new FileOutputStream(path + "\\" + usuario.getNombreUsuario() + "/" + file.getName() + "/" + (iNumeroFilas + 1)));
+					dos = new DataOutputStream(new FileOutputStream(path + "/" + usuario.getNombreUsuario() + "/" + file.getName() + "/" + (iNumeroFilas + 1)));
 				}
 				
 				
 				if (DataBase.ejecutarSentencia("INSERT INTO archivos (id_archivo, nombre) VALUES (" + (iNumeroFilas + 1) +", '" + fileName +"')"))
-					System.out.println("Añadido correctamente");
+					System.out.println("Aï¿½adido correctamente");
 						
 			}	
 			
-			while (fileSize > 0 && (numBytes = dis.read(data, 0, (int)Math.min(data.length, fileSize))) != -1)  
+			System.out.println("Minimo entre: " + (int)Math.min(data.length, fileSize) );
+			while ((fileSize > 0) && (numBytes = dis.read(data, 0, (int)Math.min(data.length, fileSize))) > 0)  
 			{  
-			    dos.write(data, 0, numBytes);  
-			    fileSize -= numBytes;  
-			}  
+				dos.write(data, 0, numBytes); 
+				dos.flush();
+				fileSize -= numBytes;  
+			} 
 			
 			dos.close();
 			System.out.println("Recibido");
@@ -146,8 +152,8 @@ public class ThreadCliente extends Thread {
 	boolean buscarDirectorio(String dir){
 		boolean bResultado = false;
 		
-		File file = new File(path + "\\k3rnel");
-		System.out.println(path + "\\k3rnel");
+		File file = new File(path + "/k3rnel");
+		System.out.println("El path es: " + path + "/k3rnel");
 		String [] directorios = file.list();
 		
 		for (int i = 0; i < directorios.length; i++)
@@ -176,7 +182,7 @@ public class ThreadCliente extends Thread {
 				FicheroSincronizacion fichero = (FicheroSincronizacion)recibirObjeto();
 				System.out.println("Objeto: " + fichero.getNombreFichero() + " Ruta: " + fichero.getRutaFichero());
 				//Creamos un nuevo file para mirar si existe o no el archivo
-				File file = new File(path + "\\k3rnel\\" + fichero.getNombreFichero());
+				File file = new File(path + "/k3rnel/" + fichero.getNombreFichero());
 				//Existe? Si no existe enviamos un boolean para indicar que no existe al cliente, y esperamos
 				//la transferencia
 				if (file.exists())
@@ -184,7 +190,7 @@ public class ThreadCliente extends Thread {
 				else
 					ddos.writeObject(new Boolean(false));
 				
-				//Añadimos a la base de datos el fichero
+				//Aï¿½adimos a la base de datos el fichero
 				DataBase.ejecutarSentencia("INSERT INTO sincronizacion (id_usuario, nombre, ruta) VALUES (" + 1 +", '" + fichero.getNombreFichero() +"','" + fichero.getRutaFichero() + "')");
 				
 			}
@@ -222,7 +228,7 @@ public class ThreadCliente extends Thread {
 			//Enviamos el fichero
 			String nombreFichero = fSin.getNombreFichero();
 			String strExtension = OperacionesFichero.obtenerExtension(nombreFichero);
-			enviarArchivo(path + "\\k3rnel\\" + fSin.getNombreFichero() + "\\1" + strExtension);
+			enviarArchivo(path + "/k3rnel/" + fSin.getNombreFichero() + "/1" + strExtension);
 		}
 	}
 	
@@ -255,7 +261,7 @@ public class ThreadCliente extends Thread {
 	private void enviarArchivo(String rutaArchivo){
 		byte [] data = new byte[65536];
 		int numBytes;
-				
+		
 		File file = new File(rutaArchivo);
 		
 		try{
@@ -267,16 +273,11 @@ public class ThreadCliente extends Thread {
 			{	
 				//Enviamos el bloque.
 				ddos.write(data, 0, numBytes);
+				ddos.flush();
 			}
 			
 			dis.close();
 			
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -285,4 +286,51 @@ public class ThreadCliente extends Thread {
 			e.printStackTrace();
 		}	
 	}
+	
+	private void exploracion(){
+		File file = new File(path + "/" + usuario.getNombreUsuario());
+		String [] elementos = file.list();
+		String [] elementosFiltrados = filtrar(elementos);
+		Integer iNumElementos = elementosFiltrados.length; 
+				
+		try {
+			ddos.writeObject(iNumElementos);
+			
+			for (int i = 0; i < iNumElementos; i++){
+				ddos.writeObject(elementosFiltrados[i]);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private String [] filtrar(String [] elementos){
+		ArrayList<String> resultado = new ArrayList();
+		
+		for (int i = 0; i < elementos.length; i++){
+			if (elementos[i].charAt(0) != '.' && elementos[i].charAt(0) != '~')
+				resultado.add(elementos[i]);
+		}
+		
+		String [] elementosFil = new String[resultado.size()];
+		
+		for (int i = 0; i < resultado.size(); i++){
+			elementosFil[i] = resultado.get(i);
+		}
+		
+		return elementosFil;
+	}
+	
+	private void enviarFichero(){
+		try {
+			String nombreFichero = (String)dis.readObject();
+			System.out.println(nombreFichero);
+			enviarArchivo(path + "/" + usuario.getNombreUsuario() + "/" + nombreFichero);
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }
