@@ -118,7 +118,7 @@ public class ThreadCliente extends Thread {
 				
 				if (fileName.contains(".")){
 					String extension = fileName.substring(fileName.lastIndexOf("."), fileName.length());
-					dos = new DataOutputStream(new FileOutputStream(path + "/" + usuario.getNombreUsuario() + "/" + file.getName() + "/" + (iNumeroFilas + 1) + "." + extension));
+					dos = new DataOutputStream(new FileOutputStream(path + "/" + usuario.getNombreUsuario() + "/" + file.getName() + "/" + (iNumeroFilas + 1) + extension));
 				}else{
 					dos = new DataOutputStream(new FileOutputStream(path + "/" + usuario.getNombreUsuario() + "/" + file.getName() + "/" + (iNumeroFilas + 1)));
 				}
@@ -323,10 +323,26 @@ public class ThreadCliente extends Thread {
 	}
 	
 	private void enviarFichero(){
+		//Aqui falta mirar que no falle la consulta a BD
 		try {
 			String nombreFichero = (String)dis.readObject();
-			System.out.println(nombreFichero);
-			enviarArchivo(path + "/" + usuario.getNombreUsuario() + "/" + nombreFichero);
+			ResultSet rs = DataBase.ejecutarConsulta("select * FROM archivos where nombre like '" + nombreFichero + "' ORDER BY id_archivo DESC LIMIT 1");
+			int iNumeroFichero = 0;
+			try {
+				iNumeroFichero = rs.getInt(2);
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("ID DE ARCHIVO: " + iNumeroFichero);
+			
+			if (nombreFichero.lastIndexOf(".") != nombreFichero.length() - 4)
+				enviarArchivo(path + "/" + usuario.getNombreUsuario() + "/" + nombreFichero + "/" + iNumeroFichero);
+			else
+				enviarArchivo(path + "/" + usuario.getNombreUsuario() + "/" + nombreFichero + "/" + iNumeroFichero + nombreFichero.substring(nombreFichero.lastIndexOf("."), nombreFichero.length()));
+			
+			
 		} catch (ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
