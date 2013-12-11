@@ -37,6 +37,7 @@ public class ListViewIcons extends ScrollPane{
 	private ItemDE [] items;
 	private final ContextMenu cm = new ContextMenu();
 	private NetBackup vista;
+	Label labelNumArchivos = null;
 	
 	public ListViewIcons(NetBackup _vista){
 		this.vista = _vista;
@@ -89,7 +90,7 @@ public class ListViewIcons extends ScrollPane{
 		HBox pie = new HBox();
 		pie.setPrefHeight(30);
 		pie.setId("pie-explorador");
-		Label labelNumArchivos = new Label("TOTAL: X ARCHIVOS");
+		labelNumArchivos = new Label("TOTAL: Sin calcular");
 		labelNumArchivos.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
 		pie.getChildren().add(labelNumArchivos);
 		labelNumArchivos.setStyle("-fx-text-fill: white; -fx-padding: 7");
@@ -128,8 +129,9 @@ public class ListViewIcons extends ScrollPane{
 		HBox fila = null;
 		this.items = _items;
 		contenedorItems.getChildren().clear();
+		int i;
 		
-		for (int i = 0; i < items.length; i++){
+		for (i = 0; i < items.length; i++){
 			final ItemDE fItem = items[i]; 
 			
 			items[i].setOnMouseClicked(new EventHandler<MouseEvent>(){
@@ -172,5 +174,7 @@ public class ListViewIcons extends ScrollPane{
 				fila.getChildren().add(items[i]);
 			}
 		}
+		
+		labelNumArchivos.setText("TOTAL: " + i  + " archivos");
 	}
 }

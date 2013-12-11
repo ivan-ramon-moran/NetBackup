@@ -24,6 +24,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -558,11 +559,11 @@ public class NetBackup extends Application {
         panelInicio.getChildren().add(contConexionMod);
         //-------------------------------------------------------------------------
         //---------------------------------RESTAURACION CON UN CLIC-------------------------------
-        HBox contFila2 = new HBox();
+        HBox contFila2 = new HBox(55);
         VBox contModuloRestaurar = new VBox(10);
         contFila2.getChildren().add(contModuloRestaurar);
-        contModuloRestaurar.setMaxSize(485, 200);
-        contModuloRestaurar.setPrefSize(485, 170);
+        contModuloRestaurar.setMaxSize(535, 200);
+        contModuloRestaurar.setPrefSize(535, 170);
         contModuloRestaurar.getStyleClass().add("detalles-conexion");
         Label labelTituloRestaurar = new Label("RESTAURACIÓN CON UN CLICK");
         labelTituloRestaurar.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 20));
@@ -601,9 +602,9 @@ public class NetBackup extends Application {
         //---------------------------------------GRAFICA CARGA------------------------------------
         VBox contGrafica = new VBox(20);
         Label labelGrafica = new Label("CARGA DEL SERVIDOR");
-        contGrafica.setStyle("-fx-background-color: light-grey");
+        labelGrafica.setStyle("-fx-padding: 15 0 0 0");
         labelGrafica.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans-Bold.ttf"), 14));
-        Canvas canvas = new Canvas(500, 150);
+        Canvas canvas = new Canvas(300, 150);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         
         Double [] xPoints = new Double[2];
@@ -618,17 +619,17 @@ public class NetBackup extends Application {
                 new double[]{210, 210, 240, 240}, 4);        
         Line l0 = new Line(0, 0, 0, 100);
         l0.setStroke(Color.GRAY);
-        Line l1 = new Line(1, 0, 500, 0);
+        Line l1 = new Line(1, 0, 415, 0);
         l1.setStroke(Color.GRAY);
-        Line l2 = new Line(1, 25, 500, 25);
+        Line l2 = new Line(1, 25, 415, 25);
         l2.setStroke(Color.LIGHTGRAY);
-        Line l3 = new Line(1, 50, 500, 50);
+        Line l3 = new Line(1, 50, 415, 50);
         l3.setStroke(Color.LIGHTGRAY);
-        Line l4 = new Line(1, 75, 500, 75);
+        Line l4 = new Line(1, 75, 415, 75);
         l4.setStroke(Color.LIGHTGRAY);
-        Line l5 = new Line(1, 100, 500, 100);
+        Line l5 = new Line(1, 100, 415, 100);
         l5.setStroke(Color.GRAY);
-        Line l6 = new Line(500, 0, 500, 100);
+        Line l6 = new Line(415, 0, 415, 100);
         l6.setStroke(Color.GRAY);
         Line p1 = new Line(1, 100, 60, 60);
         p1.setStroke(Color.ORANGE);
@@ -751,8 +752,23 @@ public class NetBackup extends Application {
     	Label labelSeccionInicio = new Label("OPCIONES DE INICIO");
     	labelSeccionInicio.setStyle("-fx-text-fill: #716e6e");
     	contOpcionesInicio.getChildren().add(labelSeccionInicio);
+    	//-------------------------------INICIAR CON EL SO--------------------------------------
     	CheckBox checkInicioSistema = new CheckBox("Iniciar NetBackup con el sistema operativo");
-    	CheckBox checkInicioMinimizada = new CheckBox("Iniciar la aplicaci�n minimizada");
+    	checkInicioSistema.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+    	
+    	if (Configuracion.getInstance().getIniciarConSistema())
+    		checkInicioSistema.setSelected(true);
+    	
+    	//--------------------------------------------------------------------------------------
+    	//-------------------------------INICIAR MINIMIZADA--------------------------------------
+    	CheckBox checkInicioMinimizada = new CheckBox("Iniciar la aplicación minimizada");
+    	checkInicioMinimizada.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+    	
+    	if (Configuracion.getInstance().getIniciarMinimizada())
+    		checkInicioMinimizada.setSelected(true);
+    	
+    	//--------------------------------------------------------------------------------------
+
     	//Seccion Politica de alertas
     	HBox contOpcionesAlertas = new HBox();
     	contOpcionesAlertas.setPrefHeight(25);
@@ -760,17 +776,24 @@ public class NetBackup extends Application {
     	Label labelSeccionAlertas = new Label("POLÍTICA DE ALERTAS");
     	labelSeccionAlertas.setStyle("-fx-text-fill: #716e6e");
     	CheckBox checkErrorGrave = new CheckBox("Alertarme cuando ocurra un error grave");
+    	checkErrorGrave.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
     	CheckBox checkAvisoTransferencia = new CheckBox("Avisarme cuando se vaya a copiar un archivo o conjunto de archivos en el servidor");
+    	checkAvisoTransferencia.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
     	CheckBox checkEliminarArchivos = new CheckBox("Avisarme cuando se borre un archivo del servidor");
-    	CheckBox checkNuevoArchivo = new CheckBox("Avisarme cuando en mi carpeta de sincronizaci�n se produzcan cambios");
+    	checkEliminarArchivos.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+    	CheckBox checkNuevoArchivo = new CheckBox("Avisarme cuando en mi carpeta de sincronización se produzcan cambios");
+    	checkNuevoArchivo.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
     	//Secci�n idioma
     	HBox contOpcionesIdioma = new HBox();
     	contOpcionesIdioma.setPrefHeight(25);
     	contOpcionesIdioma.getStyleClass().add("apartado-configuracion");
-    	Label labelSeccionIdioma = new Label("IDIOMA DE LA APLICACI�N");
+    	Label labelSeccionIdioma = new Label("IDIOMA DE LA APLICACIÓN");
     	labelSeccionIdioma.setStyle("-fx-text-fill: #716e6e");
     	HBox contIdioma = new HBox(20);
-    	Label labelSeleccionIdioma = new Label("Seleccione el idioma en el que quiere que se muestre la aplicaci�n");
+    	Label labelSeleccionIdioma = new Label("Seleccione el idioma en el que quiere que se muestre la aplicación");
+    	labelSeleccionIdioma.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
+
     	ComboBox<String> cbIdioma = new ComboBox<String>();
     	ObservableList<String> opcionesIdioma = 
     		    FXCollections.observableArrayList(
@@ -799,25 +822,48 @@ public class NetBackup extends Application {
     	Label labelSeccionMonitor = new Label("DIRECTORIOS A MONITOREAR");
     	labelSeccionMonitor.setStyle("-fx-text-fill: #716e6e");
     	contDirectoriosMonitor.getChildren().add(labelSeccionMonitor);
-    	Label labelExMonitor = new Label("Por defecto NetBackup solo monitorea tu carpeta personal, si quieres que se monitoreen m�s directorios tendr�s que a�adirlos a la lista. Ten cuidado !!! no tiene sentido a�adir directorios que no utilizas, esto podr�a llenar el servidor de archivos que no utilizar�s.");
+    	Label labelExMonitor = new Label("Por defecto NetBackup solo monitorea tu carpeta personal, si quieres que se monitoreen más directorios tendrás que añadirlos a la lista. Ten cuidado !!! no tiene sentido añadir directorios que no utilizas, esto podría llenar el servidor de archivos que no utilizarás.");
     	labelExMonitor.setWrapText(true);
     	labelExMonitor.getStyleClass().add("label-configuracion");
-    	ListView dirMonitorear = new ListView();
+    	//-------------------------------directorios a monitorear----------------
+    	ListView<String> dirMonitorear = new ListView<String>();
+    	ArrayList<String> directoriosMon = Configuracion.getInstance().getDirectoriosMon();
+    	
+    	for (int i = 0; i < directoriosMon.size(); i++)
+    		dirMonitorear.getItems().add(directoriosMon.get(i));
+    	//-----------------------------------------------------------------------
+    	
     	dirMonitorear.setPrefHeight(200);
-    	Button botonAnyadirMon = new Button("A�adir directorio");
+    	Button botonAnyadirMon = new Button("Añadir directorio");
     	//SECCION SINCRO
     	HBox contDirectoriosSincro = new HBox();
     	contDirectoriosSincro.getStyleClass().add("apartado-configuracion");
     	Label labelSeccionSincro = new Label("DIRECTORIOS A SINCRONIZAR");
     	labelSeccionSincro.setStyle("-fx-text-fill: #716e6e");
     	contDirectoriosSincro.getChildren().add(labelSeccionSincro);
-    	Label labelExSincro = new Label("Por defecto NetBackup solo sincroniza un directorio para todas las m�quinas de una misma red. Si quieres m�s directorios sincronizados tendr�s que a�adirlos.");
+    	Label labelExSincro = new Label("Por defecto NetBackup solo sincroniza un directorio para todas las máquinas de una misma red. Si quieres más directorios sincronizados tendrás que añadirlos.");
     	labelExSincro.setWrapText(true);
     	ListView dirSincro = new ListView();
     	dirSincro.setPrefHeight(200);
+    	//----------------------------------------DIRECTORIO ENTRANTE---------------------
+    	HBox contDirEntrante = new HBox();
+    	contDirEntrante.getStyleClass().add("apartado-configuracion");
+    	Label labelSeccionDirEntrante = new Label("DIRECTORIO TRANSFERENCIAS ENTRANTES");
+    	labelSeccionDirEntrante.setStyle("-fx-text-fill: #716e6e");
+    	contDirEntrante.getChildren().add(labelSeccionDirEntrante);
+    	HBox contTextLabel = new HBox(5);
+    	Label labelDirEntrante = new Label("Seleccione el directorio donde se guardaran las descargas del servidor: ");
+    	labelDirEntrante.setStyle("-fx-padding: 3 0 0 0");
+    	TextField tDirEntrante = new TextField();
+    	tDirEntrante.setPrefWidth(250);
+    	contTextLabel.getChildren().addAll(labelDirEntrante, tDirEntrante);
+    	tDirEntrante.setText(Configuracion.getInstance().getDirectorioEntrante());
+    	//-------------------------------------------------------------------------------
     	
     	cuerpoConfiguracion.getChildren().addAll(contDirectoriosMonitor, labelExMonitor, dirMonitorear, botonAnyadirMon);
     	cuerpoConfiguracion.getChildren().addAll(contDirectoriosSincro, labelExSincro, dirSincro);
+    	cuerpoConfiguracion.getChildren().addAll(contDirEntrante, contTextLabel);
+
     }
     
     private void restaurar(){
@@ -896,7 +942,7 @@ public class NetBackup extends Application {
     public void descargarFichero(ItemDE item){
     	cliente.enviarObjeto("4");
     	cliente.enviarObjeto(item.getNombreFichero());
-    	cliente.recibirFichero();
+    	cliente.recibirFichero(item.getNombreFichero());
     }
 }
 

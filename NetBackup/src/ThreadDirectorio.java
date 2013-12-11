@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -65,15 +67,19 @@ public class ThreadDirectorio extends Thread{
 				//AQUI MUESTRO LAS DIFERENCIAS
 				for (int i = 0; i < aAuxElementos.size(); i++){
               	    final File file = new File(fDir.getAbsolutePath() + "/" + aAuxElementos.get(i));	
-
-					Platform.runLater(new Runnable() {
-          			  @Override
-          			  public void run() {
-          				  transferencias.addItem(new Transferencia(file.getAbsolutePath(), file.getName(), obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
-          			  }
-          			});
-          		colaTransferencias.encolar(new Transferencia(file.getAbsolutePath(), file.getName(), obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
-          		ContadorItems.incrementarNumero();
+              	    
+              	    if (pasaFiltro(file)){
+						
+              	    	Platform.runLater(new Runnable() {
+	          			  @Override
+	          			  public void run() {
+	          				  transferencias.addItem(new Transferencia(file.getAbsolutePath(), file.getName(), obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+	          			  }
+	          			});
+						
+              	    	colaTransferencias.encolar(new Transferencia(file.getAbsolutePath(), file.getName(), obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+						ContadorItems.incrementarNumero();
+              	    }
 				}
 				//BORRO EL ArrayList
 				aAuxElementos.clear();
@@ -93,6 +99,23 @@ public class ThreadDirectorio extends Thread{
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private boolean pasaFiltro(File file){
+		boolean bOk = false;
+		
+		
+		if (file.length() != 0){
+			if (file.getName().charAt(0) != '.')
+				bOk = true;
+			else
+				bOk = false;
+		}else{
+			bOk = false;
+		}
+			
+		
+		return bOk;
 	}
 	
 	public static String obtenerTamanyo(Long fileSize){

@@ -5,11 +5,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class Configuracion {
 	
 	private static Configuracion config = null;
 	public boolean bPrimeraVez = true;
+	public ArrayList<String> listaDirectoriosMon = new ArrayList<String>();
+	private boolean bIniciarConSistema = false;
+	private boolean bIniciarMinimizada = false;
+	private String directorioEntrante = "/home";
 	
 	public Configuracion(){
 		File fileConfig = new File("NetBackupConfig.cfg");
@@ -34,8 +39,56 @@ public class Configuracion {
 	private void leerConfiguracion(File _fileConfig){
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(_fileConfig));
-			this.bPrimeraVez = Boolean.parseBoolean(br.readLine());
+			String ficheroConfig = "";
+			String linea = "";
+			
+			while ((linea = br.readLine()) != null)
+				ficheroConfig += linea + "\n";
+			
 			br.close();
+
+			String [] aConfig = ficheroConfig.split("\n");
+			
+			//-------------------------------------DIRECTORIOS A MONITOREAR---------------------
+			for (int i = 0; i < aConfig.length; i++){
+				if (aConfig[i].equals("<directorios-mon>")){
+					while (!aConfig[i + 1].equals("</directorios-mon>") ){
+						i++;
+						listaDirectoriosMon.add(aConfig[i]);
+					}
+				}
+			}
+			
+			/*for (int i = 0; i < listaDirectoriosMon.size(); i++)
+				System.out.println(listaDirectoriosMon.get(i));*/
+			//----------------------------------------------------------------------------------
+			//-------------------------------------INICIAR CON EL SISTEMA-----------------------
+			for (int i = 0; i < aConfig.length; i++){
+				if (aConfig[i].equals("<iniciar-con-sistema>")){
+					bIniciarConSistema = Boolean.parseBoolean(aConfig[i + 1]);
+				}
+			}
+			
+			System.out.println("Iniciar con el sistema: " + bIniciarConSistema);
+			//----------------------------------------------------------------------------------
+			//-------------------------------------INICIAR MINIMIZADA---------------------------
+			for (int i = 0; i < aConfig.length; i++){
+				if (aConfig[i].equals("<iniciar-minimizada>")){
+					bIniciarMinimizada = Boolean.parseBoolean(aConfig[i + 1]);
+				}
+			}
+			
+			System.out.println("Iniciar minimizada: " + bIniciarMinimizada);
+			//----------------------------------------------------------------------------------
+			//-------------------------------------DIRECTORIO ENTRANTE--------------------------
+			for (int i = 0; i < aConfig.length; i++){
+				if (aConfig[i].equals("<directorio-entrante>")){
+					directorioEntrante = aConfig[i + 1];
+				}
+			}
+			
+			System.out.println("Directorio entrante " + directorioEntrante);
+			//----------------------------------------------------------------------------------
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -64,5 +117,20 @@ public class Configuracion {
 		
 	}
 	
+	public ArrayList<String> getDirectoriosMon(){
+		return this.listaDirectoriosMon;
+	}
+	
+	public boolean getIniciarConSistema(){
+		return this.bIniciarConSistema;
+	}
+	
+	public boolean getIniciarMinimizada(){
+		return this.bIniciarMinimizada;
+	}
+	
+	public String getDirectorioEntrante(){
+		return this.directorioEntrante;
+	}
 	
 }

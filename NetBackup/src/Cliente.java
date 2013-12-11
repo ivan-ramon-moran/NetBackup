@@ -289,7 +289,7 @@ public class Cliente {
 		System.out.println("Recibido");
 	}
 	
-	public void recibirFichero(){
+	public void recibirFichero(String nombreFichero){
 		byte [] data = new byte[65536];
 		int numBytes;
 		DataOutputStream ddos = null;
@@ -305,7 +305,7 @@ public class Cliente {
 			long tamanyoRecibido = 0;
 			
 			//Creamos la carpeta en el servidor
-			File file = new File("/home/k3rnel/" + "aaa.png");
+			File file = new File(Configuracion.getInstance().getDirectorioEntrante() + "/" + nombreFichero);
 			ddos = new DataOutputStream(new FileOutputStream(file));
 			
 			while (fileSize > 0 && ((numBytes = ddis.read(data, 0, (int)Math.min(data.length, fileSize))) > 0))  
