@@ -336,7 +336,7 @@ public class ThreadCliente extends Thread {
 				e.printStackTrace();
 			}
 			System.out.println("ID DE ARCHIVO: " + iNumeroFichero);
-			
+			//Falla al ser extensiones de 4 caracteres, hay que hacerlo por mimetype
 			if (nombreFichero.lastIndexOf(".") != nombreFichero.length() - 4)
 				enviarArchivo(path + "/" + usuario.getNombreUsuario() + "/" + nombreFichero + "/" + iNumeroFichero);
 			else
