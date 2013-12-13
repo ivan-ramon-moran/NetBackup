@@ -18,19 +18,19 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-//LA CLASE VENTANAPIDE USUARIO Y CONTRASEÑA AL USUARIO
+//LA CLASE VENTANAPIDE USUARIO Y CONTRASEï¿½A AL USUARIO
 
 public class VentanaLogin {
 	
 	//DECLARACION DE VARIABLES
 	private TextField usuario = new TextField ();
 	private TextField password = new TextField ();
-	private String usser = null;
-	private String pass = null;
 	private Stage primaryStage = null;
 	private double xOffset, yOffset;
+	private NetBackup vista = null;
 	
-	public VentanaLogin () {
+	public VentanaLogin (NetBackup _vista) {
+		this.vista = _vista;
 		primaryStage = new Stage(StageStyle.TRANSPARENT);
 		VBox contenedorPrincipal = new VBox (15);
 		
@@ -85,14 +85,14 @@ public class VentanaLogin {
 		
 		HBox contPass = new HBox(10);
 		contPass.setAlignment(Pos.CENTER);
-		Label etiquetaPass = new Label("Contraseña:");
+		Label etiquetaPass = new Label("Contraseï¿½a:");
 		etiquetaPass.setStyle("-fx-font-size: 14");
 
 		contPass.getChildren().addAll(etiquetaPass, password);
 		contCampos.getChildren().addAll(contUsuario, contPass);
 		
 		try {
-			//DECLARACIÓN DE LOS BOTONES
+			//DECLARACIï¿½N DE LOS BOTONES
 			Button aceptar = new Button ("Aceptar");
 			aceptar.setId("aceptar");
 			Button cancelar = new Button ("Cancelar");
@@ -112,7 +112,7 @@ public class VentanaLogin {
 			
 			contenedorPrincipal.getChildren().add(contCuerpo);			
 						
-			CheckBox checkInicioAutomatico = new CheckBox("Inicio de sesion automático.");
+			CheckBox checkInicioAutomatico = new CheckBox("Inicio de sesion automï¿½tico.");
 			contCampos.getChildren().add(checkInicioAutomatico);
 			contenedorPrincipal.getChildren().add(contenedorSecundario);
 			contenedorSecundario.setAlignment(Pos.CENTER_RIGHT);
@@ -141,8 +141,8 @@ public class VentanaLogin {
 			//ACCIONES QUE REALIZAN LOS BOTONES AL ACCIONARSE
 			aceptar.setOnAction (new EventHandler<ActionEvent>(){
 				public void handle(ActionEvent event){
-					usser = usuario.getPromptText();
-					pass = password.getPromptText();
+					vista.setUsuario2(usuario.getText());
+					vista.setPassword(password.getText());
 					primaryStage.close();
 				}
 				});
@@ -166,14 +166,4 @@ public class VentanaLogin {
 		primaryStage.showAndWait();
 
 	}
-
-	//MÉTODOS GET
-	public String getUsser()
-	{
-		return this.usser;
-	}
-	public String getPass()
-	{
-		return this.pass;
-	}	
 }

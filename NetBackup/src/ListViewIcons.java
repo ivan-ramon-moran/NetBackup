@@ -29,9 +29,6 @@ import javafx.scene.text.Font;
 
 public class ListViewIcons extends ScrollPane{
 	
-	private ArrayList<String> listaArchivos = new ArrayList<String>();
-	private FlowPane flow = null;
-	private static ArrayList<HBox> arrayContenedores = new ArrayList<HBox>();
 	private VBox contenedorPrincipal;
 	private VBox contenedorItems;
 	private ItemDE [] items;
@@ -43,6 +40,9 @@ public class ListViewIcons extends ScrollPane{
 		this.vista = _vista;
 		
 		contenedorPrincipal = new VBox();
+		VBox.setVgrow(contenedorPrincipal, Priority.ALWAYS);
+		
+		
 		contenedorItems = new VBox();
 		contenedorItems.setStyle("-fx-padding: 5 5 5 5");
 		VBox.setVgrow(contenedorItems, Priority.ALWAYS);
@@ -67,7 +67,7 @@ public class ListViewIcons extends ScrollPane{
 		labelBusqueda.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
 		TextField tBusqueda = new TextField();
 		tBusqueda.setPrefHeight(20);
-		tBusqueda.setStyle("-fx-background-radius: 10");
+		tBusqueda.setStyle("-fx-background-radius: 10; -fx-background-color: linear-gradient(to bottom, #d5d5d5, white)");
 		tBusqueda.setAlignment(Pos.CENTER);
 		List<String> listaFiltros = new ArrayList<String>();
 		listaFiltros.add("Todos");
@@ -90,13 +90,12 @@ public class ListViewIcons extends ScrollPane{
 		HBox pie = new HBox();
 		pie.setPrefHeight(30);
 		pie.setId("pie-explorador");
-		labelNumArchivos = new Label("TOTAL: Sin calcular");
+		labelNumArchivos = new Label("TOTAL: No hay archivos en el servidor");
 		labelNumArchivos.setFont(Font.loadFont(getClass().getResourceAsStream("/fuentes/DroidSans.ttf"), 13));
 		pie.getChildren().add(labelNumArchivos);
 		labelNumArchivos.setStyle("-fx-text-fill: white; -fx-padding: 7");
 		this.setStyle("-fx-background-color: transparent");
-		this.setMinHeight(500);
-		this.setPrefHeight(500);
+		
 		
 		DropShadow ds = new DropShadow();
         ds.setOffsetY(3.0);
@@ -111,6 +110,8 @@ public class ListViewIcons extends ScrollPane{
 		this.setContent(contenedorPrincipal);
 		this.setFitToHeight(true);
 		this.setFitToWidth(true);
+		this.setMinHeight(500);
+		this.setMinWidth(700);
 		
 		cm.setStyle("-fx-background-color: #5A5A5A ;-fx-border-radius: 5; -fx-background-radius: 5; -fx-border-width: 1");
 		//Creamos los menus items
@@ -137,7 +138,7 @@ public class ListViewIcons extends ScrollPane{
 			items[i].setOnMouseClicked(new EventHandler<MouseEvent>(){
 				@Override
 				public void handle(MouseEvent event) {
-					if (event.getClickCount() == 2){
+					if (event.getClickCount() == 2 || event.getClickCount() == 1){
 						ItemDE item = null;
 						
 						for (int i = 0; i < items.length; i++)
@@ -155,19 +156,24 @@ public class ListViewIcons extends ScrollPane{
 							item = ((ItemDE) node);
 						}
 						item.setSeleccionado(true);
-						vista.descargarFichero(item);
 					}
 					
-					if (event.getButton() == MouseButton.SECONDARY){
+					if (event.getClickCount() == 2)
+						vista.descargarFichero(fItem);
+					else if (event.getClickCount() == 1)
+						System.out.println("ssss");
+					
+					if (event.getButton() == MouseButton.SECONDARY)
 						cm.show(fItem, event.getScreenX(), event.getScreenY());
-					}
+
+				
 				}
 				
 			});
 						
 			
-			if (i % 8 == 0){
-				fila = new HBox(5);
+			if (i % 6 == 0){
+				fila = new HBox(1);
 				contenedorItems.getChildren().add(fila);
 				fila.getChildren().add(items[i]);
 			}else{

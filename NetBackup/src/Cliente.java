@@ -41,10 +41,12 @@ public class Cliente {
 				vista.setConectado();
 				dos = new ObjectOutputStream(cliente.getOutputStream());
 				ddis = new ObjectInputStream(cliente.getInputStream());
-				String nombreUsuario = "k3rnel";
-				String password = "admin";
+				
+				String nombreUsuario = vista.getNombreUsuario();
+				String password = vista.getPassword();
 				enviarObjeto(nombreUsuario);
 				enviarObjeto(password);
+				
 				try {
 					iResultado = (Integer)ddis.readObject();
 				} catch (ClassNotFoundException e) {
@@ -54,7 +56,7 @@ public class Cliente {
 				
 				if (iResultado != 1){
 					cliente.close();
-					System.out.println("Nombre de usuario o contraseña incorrectos");
+					VentanaMensaje mensaje = new VentanaMensaje(1, "Los credenciales: nombre de usuario y contraseña proporcionados son incorrectos. Verifique que los ha escrito correctamente y que NetBackupServidor esta ejecutándose");
 				}else
 				{
 					vista.setUsuario(nombreUsuario);

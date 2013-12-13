@@ -68,17 +68,21 @@ public class ThreadDirectorio extends Thread{
 				for (int i = 0; i < aAuxElementos.size(); i++){
               	    final File file = new File(fDir.getAbsolutePath() + "/" + aAuxElementos.get(i));	
               	    
-              	    if (pasaFiltro(file)){
-						
-              	    	Platform.runLater(new Runnable() {
-	          			  @Override
-	          			  public void run() {
-	          				  transferencias.addItem(new Transferencia(file.getAbsolutePath(), file.getName(), obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
-	          			  }
-	          			});
-						
-              	    	colaTransferencias.encolar(new Transferencia(file.getAbsolutePath(), file.getName(), obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
-						ContadorItems.incrementarNumero();
+              	    if (file.isDirectory()){
+              	    	copiarDirectorio(file.getAbsolutePath());
+              	    }
+              	    else{
+	              	    if (pasaFiltro(file)){
+	              	    	Platform.runLater(new Runnable() {
+		          			  @Override
+		          			  public void run() {
+		          				  transferencias.addItem(new Transferencia(file.getAbsolutePath(), file.getName(), obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+		          			  }
+		          			});
+							
+	              	    	colaTransferencias.encolar(new Transferencia(file.getAbsolutePath(), file.getName(), obtenerTamanyo(file.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+							ContadorItems.incrementarNumero();
+	              	    }
               	    }
 				}
 				//BORRO EL ArrayList
@@ -98,6 +102,32 @@ public class ThreadDirectorio extends Thread{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	private void copiarDirectorio(String path){
+		File file = new File(path);
+		String [] files = file.list();
+		
+		for (int i = 0; i < files.length; i++){
+			final File file2 = new File(file.getAbsolutePath() + "/" + files[i]);
+			
+			if (file2.isDirectory())
+				copiarDirectorio(path + "/" + files[i]);
+			else{
+				if (pasaFiltro(file)){
+          	    	Platform.runLater(new Runnable() {
+          			  @Override
+          			  public void run() {
+          				  transferencias.addItem(new Transferencia(file2.getAbsolutePath(), file2.getName(), obtenerTamanyo(file2.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+          			  }
+          			});
+					
+          	    	colaTransferencias.encolar(new Transferencia(file2.getAbsolutePath(), file2.getName(), obtenerTamanyo(file2.length()), "Archivo", "En cola...", ContadorItems.getNumeroItems()));
+					ContadorItems.incrementarNumero();
+          	    }
+			}
+				
 		}
 	}
 	

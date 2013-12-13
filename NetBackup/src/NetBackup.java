@@ -1,5 +1,14 @@
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.FileAttributeView;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -24,6 +33,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -58,6 +69,7 @@ public class NetBackup extends Application {
 	private ArrayList<Object> aLabelOpciones = new ArrayList<Object>();
 	private VBox cuerpoConfiguracion;
 	private UsuarioSistema usuarioSistema = null;
+	private String usuario, password;
 	private VentanaLogin logging = null;
 	private Label lElementoActual = null;
 	private double xOffset, yOffset;
@@ -71,12 +83,22 @@ public class NetBackup extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+    	//Mimetype
+    	Path source = Paths.get("/home/k3rnel/Escritorio/4.zip");
+        try {
+			System.out.println(Files.probeContentType(source));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       
+    	
     	//---------------------------CONFIGURACION--------------------------------
     	//Leemos la configuracion del fichero
     	System.out.println(Configuracion.getInstance().bPrimeraVez);
     	//------------------------------------------------------------------------
     	//-----------------SE INICIA LA VENTANA DE LOGGING------------------------
-    	logging = new VentanaLogin();
+    	logging = new VentanaLogin(this);
     	//------------------------USUARIO DEL SISTEMA-----------------------------
     	usuarioSistema = new UsuarioSistema();
     	//------------------------------------------------------------------------
@@ -645,24 +667,20 @@ public class NetBackup extends Application {
         contFila2.getChildren().add(contGrafica);
         
         //----------------------------------------------------------------------------------------
-        
+        HBox contExploracion = new HBox(15);
+        VBox.setVgrow(panelExploracion, Priority.ALWAYS);
+        HBox.setHgrow(contExploracion, Priority.ALWAYS);
         list = new ListViewIcons(this);
-        ArrayList aa = new ArrayList();
-        aa.add("item1");
-        aa.add("item2");
-        aa.add("item3");
-        aa.add("item4");
-        aa.add("item5");
-        aa.add("item6");
-        aa.add("item7");
-        aa.add("item8");
-        aa.add("item9");
-        aa.add("item10");
-        aa.add("item11");
-        aa.add("item12");
+        //contExploracion.getChildren().add(list);
+        ExtendedTable tVersiones = new ExtendedTable();
+        tVersiones.setMinWidth(275);
+        tVersiones.addColumn("NOMBRE", 150);
+        tVersiones.addColumn("TAMAÑO", 100);
+        tVersiones.addColumn("FECHA", 100);
         
-    	//list.setItems(aa);
-    	panelExploracion.getChildren().add(list);
+        contExploracion.getChildren().add(list);
+        contExploracion.getChildren().add(tVersiones);
+        panelExploracion.getChildren().add(contExploracion);
     	panelExploracion.setId("panelExploracion");
         
         contenedorCuerpo.getChildren().add(paneles);
@@ -943,6 +961,23 @@ public class NetBackup extends Application {
     	cliente.enviarObjeto("4");
     	cliente.enviarObjeto(item.getNombreFichero());
     	cliente.recibirFichero(item.getNombreFichero());
+    }
+    
+    public void setUsuario2(String _usuario){
+    	this.usuario = _usuario;
+    	System.out.println(usuario);
+    }
+    
+    public void setPassword(String _password){
+    	this.password = _password;
+    }
+    
+    public String getNombreUsuario(){
+    	return this.usuario;
+    }
+    
+    public String getPassword(){
+    	return this.password;
     }
 }
 

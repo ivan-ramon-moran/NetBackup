@@ -142,6 +142,8 @@ public class ExtendedTable extends ScrollPane{
 		fila.getChildren().add(contTamanyo);
 		//Miniatura
 		ImageView ivMiniatura = new ImageView(obtenerImagen(transferencia.getNombreArchivo()));
+		ivMiniatura.setFitHeight(24);
+		ivMiniatura.setFitWidth(24);
 		HBox contMiniatura = new HBox();
 		contMiniatura.setPrefWidth(100);
 		contMiniatura.getChildren().add(ivMiniatura);
